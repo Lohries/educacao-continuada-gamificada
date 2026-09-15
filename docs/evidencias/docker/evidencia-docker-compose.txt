@@ -1,0 +1,37 @@
+=== docker compose ps ===
+NAME                   IMAGE                   COMMAND                  SERVICE    CREATED              STATUS                        PORTS
+gamificacao-backend    devops-backend          "java -jar app.jar"      backend    About a minute ago   Up About a minute             0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+gamificacao-frontend   devops-frontend         "docker-entrypoint.s…"   frontend   About a minute ago   Up About a minute             0.0.0.0:5173->5173/tcp, [::]:5173->5173/tcp
+gamificacao-pgadmin    dpage/pgadmin4:latest   "/entrypoint.sh"         pgadmin    About a minute ago   Up About a minute             0.0.0.0:5050->80/tcp, [::]:5050->80/tcp
+gamificacao-postgres   postgres:16-alpine      "docker-entrypoint.s…"   postgres   About a minute ago   Up About a minute (healthy)   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp
+
+=== GET /actuator/health (backend, perfil postgres) ===
+{"status":"UP"}
+
+=== GET /api/cursos (dados vindos do Postgres) ===
+[{"id":1,"titulo":"Fundamentos de Spring Boot","descricao":"Introducao a criacao de APIs REST com Spring Boot","cargaHoraria":20,"xpRecompensa":100},{"id":2,"titulo":"TDD na Pratica","descricao":"Test Driven Development com JUnit e Mockito","cargaHoraria":15,"xpRecompensa":150},{"id":3,"titulo":"BDD e ATDD com Cucumber","descricao":"Escrevendo criterios de aceite executaveis a partir de User Stories","cargaHoraria":10,"xpRecompensa":200}]
+
+=== \dt no Postgres (via docker exec) ===
+             List of relations
+ Schema |    Name    | Type  |    Owner    
+--------+------------+-------+-------------
+ public | badges     | table | gamificacao
+ public | cursos     | table | gamificacao
+ public | matriculas | table | gamificacao
+ public | usuarios   | table | gamificacao
+(4 rows)
+
+
+=== SELECT * FROM badges ===
+ id |    descricao    |     nome      | xp_minimo 
+----+-----------------+---------------+-----------
+  1 | Atingiu 100 XP  | Iniciante     |       100
+  2 | Atingiu 500 XP  | Intermediario |       500
+  3 | Atingiu 1000 XP | Avancado      |      1000
+(3 rows)
+
+
+=== Frontend (Vite/serve) respondendo ===
+GET http://localhost:5173 -> 200
+=== PgAdmin respondendo ===
+GET http://localhost:5050/login -> 401 (401 esperado sem sessao/CSRF via curl; pagina de login acessivel no navegador)

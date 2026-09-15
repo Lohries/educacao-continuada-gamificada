@@ -1,0 +1,68 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: gamificacao-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: gamificacao
+      POSTGRES_USER: gamificacao
+      POSTGRES_PASSWORD: gamificacao
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gamificacao -d gamificacao"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: gamificacao-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@gamificacao.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: gamificacao-backend
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: gamificacao
+      DB_USER: gamificacao
+      DB_PASSWORD: gamificacao
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Variaveis VITE_* sao embutidas no bundle em tempo de build, por
+        # isso vao como build arg (nao como environment de runtime).
+        VITE_API_URL: http://localhost:8080
+    container_name: gamificacao-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
