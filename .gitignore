@@ -21,3 +21,6 @@ Thumbs.db
 
 # Docker volumes locais
 pgdata/
+
+# Estado local de sessao do Claude Code (nao faz parte do projeto)
+.claude/
