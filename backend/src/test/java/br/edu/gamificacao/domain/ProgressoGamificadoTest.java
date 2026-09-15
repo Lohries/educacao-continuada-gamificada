@@ -37,6 +37,12 @@ class ProgressoGamificadoTest {
     }
 
     @Test
+    @DisplayName("O nome do aluno informado na criacao deve ser recuperavel")
+    void deveExporNomeDoAluno() {
+        assertEquals("Aluno Teste", progresso.getNomeAluno());
+    }
+
+    @Test
     @DisplayName("Um progresso recem-criado nao possui badges")
     void deveIniciarSemBadges() {
         assertTrue(progresso.getBadges().isEmpty());
@@ -46,6 +52,12 @@ class ProgressoGamificadoTest {
     @DisplayName("Nao deve permitir criar progresso com nome em branco")
     void naoDevePermitirNomeEmBranco() {
         assertThrows(IllegalArgumentException.class, () -> new ProgressoGamificado("  "));
+    }
+
+    @Test
+    @DisplayName("Nao deve permitir criar progresso com nome nulo")
+    void naoDevePermitirNomeNulo() {
+        assertThrows(IllegalArgumentException.class, () -> new ProgressoGamificado(null));
     }
 
     @Test

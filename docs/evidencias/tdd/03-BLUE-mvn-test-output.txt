@@ -1,0 +1,12 @@
+Tests run: 16, Failures: 0, Errors: 0, Skipped: 0
+
+-------------------------------------------------------------------------------
+Test set: br.edu.gamificacao.domain.ProgressoGamificadoTest
+-------------------------------------------------------------------------------
+Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 s -- in br.edu.gamificacao.domain.ProgressoGamificadoTest
+
+Cobertura (JaCoCo) - pacote br.edu.gamificacao.domain:
+Instrucoes: 100% (0 of 138 perdidas)
+Branches:   100% (0 of 10 perdidas)
+Linhas:     100% (0 of 35 perdidas)
+Metodos:    100% (0 of 12 perdidos)
