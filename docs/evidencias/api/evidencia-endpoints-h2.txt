@@ -1,0 +1,18 @@
+=== POST /api/usuarios ===
+{"id":2,"nome":"Emanuel Teste","email":"emanuel.teste@example.com","xp":0,"nivel":1,"criadoEm":"2026-09-15T19:32:56.4713871"}
+
+=== GET /api/cursos ===
+[{"id":1,"titulo":"Fundamentos de Spring Boot","descricao":"Introducao a criacao de APIs REST com Spring Boot","cargaHoraria":20,"xpRecompensa":100},{"id":2,"titulo":"TDD na Pratica","descricao":"Test Driven Development com JUnit e Mockito","cargaHoraria":15,"xpRecompensa":150},{"id":3,"titulo":"BDD e ATDD com Cucumber","descricao":"Escrevendo criterios de aceite executaveis a partir de User Stories","cargaHoraria":10,"xpRecompensa":200}]
+
+=== POST /api/matriculas (usuario 1, curso 2) ===
+{"id":2,"usuarioId":1,"nomeUsuario":"Luis Teste","cursoId":2,"tituloCurso":"TDD na Pratica","dataMatricula":"2026-09-15T19:32:56.6607739","concluida":false,"dataConclusao":null}
+
+=== POST /api/matriculas/2/concluir ===
+{"id":2,"usuarioId":1,"nomeUsuario":"Luis Teste","cursoId":2,"tituloCurso":"TDD na Pratica","dataMatricula":"2026-09-15T19:32:56.660774","concluida":true,"dataConclusao":"2026-09-15T19:32:56.7471326"}
+
+=== GET /api/usuarios/ranking ===
+[{"posicao":1,"usuarioId":1,"nome":"Luis Teste","xp":250,"nivel":3},{"posicao":2,"usuarioId":2,"nome":"Emanuel Teste","xp":0,"nivel":1}]
+
+=== GET /actuator/health ===
+{"status":"UP"}
+

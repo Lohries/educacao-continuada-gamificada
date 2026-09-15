@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:gamificacao}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER:gamificacao}
+    password: ${DB_PASSWORD:gamificacao}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
