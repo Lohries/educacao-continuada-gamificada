@@ -1,0 +1,1077 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------< br.edu.gamificacao:educacao-continuada-gamificada >----------
+[INFO] Building EducacaoContinuadaGamificada 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.13:prepare-agent (prepare-agent) @ educacao-continuada-gamificada ---
+[INFO] argLine set to -javaagent:C:\\Users\\Luis\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.13\\org.jacoco.agent-0.8.13-runtime.jar=destfile=C:\\Users\\Luis\\Downloads\\devops\\backend\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ educacao-continuada-gamificada ---
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ educacao-continuada-gamificada ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ educacao-continuada-gamificada ---
+[INFO] Copying 3 resources from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ educacao-continuada-gamificada ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.2:test (default-test) @ educacao-continuada-gamificada ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running br.edu.gamificacao.domain.ProgressoGamificadoTest
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.165 s -- in br.edu.gamificacao.domain.ProgressoGamificadoTest
+[INFO] Running br.edu.gamificacao.EducacaoContinuadaGamificadaApplicationTests
+20:00:21.569 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [br.edu.gamificacao.EducacaoContinuadaGamificadaApplicationTests]: EducacaoContinuadaGamificadaApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+20:00:21.835 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration br.edu.gamificacao.EducacaoContinuadaGamificadaApplication for test class br.edu.gamificacao.EducacaoContinuadaGamificadaApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.0)
+
+2026-09-15T20:00:22.998-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] acaoContinuadaGamificadaApplicationTests : Starting EducacaoContinuadaGamificadaApplicationTests using Java 21.0.12.1 with PID 27088 (started by Luis in C:\Users\Luis\Downloads\devops\backend)
+2026-09-15T20:00:23.000-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] acaoContinuadaGamificadaApplicationTests : The following 1 profile is active: "h2"
+2026-09-15T20:00:25.648-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-15T20:00:25.780-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 114 ms. Found 4 JPA repository interfaces.
+2026-09-15T20:00:27.293-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-15T20:00:27.418-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.2.Final
+2026-09-15T20:00:27.499-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-15T20:00:28.257-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-15T20:00:28.336-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-09-15T20:00:28.998-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:gamificacao user=SA
+2026-09-15T20:00:29.003-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-09-15T20:00:29.078-03:00  WARN 27088 --- [EducacaoContinuadaGamificada] [           main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-09-15T20:00:29.130-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-15T20:00:31.593-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: 
+    create table badges (
+        id bigint generated by default as identity,
+        descricao varchar(255),
+        nome varchar(60) not null,
+        xp_minimo integer not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table cursos (
+        id bigint generated by default as identity,
+        carga_horaria integer not null,
+        descricao varchar(500),
+        titulo varchar(160) not null,
+        xp_recompensa integer not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table matriculas (
+        id bigint generated by default as identity,
+        concluida boolean not null,
+        data_conclusao timestamp(6),
+        data_matricula timestamp(6) not null,
+        curso_id bigint not null,
+        usuario_id bigint not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table usuarios (
+        id bigint generated by default as identity,
+        criado_em timestamp(6) not null,
+        email varchar(160) not null,
+        nivel integer not null,
+        nome varchar(120) not null,
+        xp integer not null,
+        primary key (id)
+    )
+Hibernate: 
+    alter table if exists badges 
+       drop constraint if exists UKexxcc1c7cueytjqfscl4cbdqq
+Hibernate: 
+    alter table if exists badges 
+       add constraint UKexxcc1c7cueytjqfscl4cbdqq unique (nome)
+Hibernate: 
+    alter table if exists matriculas 
+       drop constraint if exists UKtd2ei5iioabkv4d4e323epgig
+Hibernate: 
+    alter table if exists matriculas 
+       add constraint UKtd2ei5iioabkv4d4e323epgig unique (usuario_id, curso_id)
+Hibernate: 
+    alter table if exists usuarios 
+       drop constraint if exists UKkfsp0s1tflm1cwlj8idhqsad0
+Hibernate: 
+    alter table if exists usuarios 
+       add constraint UKkfsp0s1tflm1cwlj8idhqsad0 unique (email)
+Hibernate: 
+    alter table if exists matriculas 
+       add constraint FKtgxnkauqy13npoi9q2t9n0ol5 
+       foreign key (curso_id) 
+       references cursos
+Hibernate: 
+    alter table if exists matriculas 
+       add constraint FKil5paxcpkrf9viik9jbb439qs 
+       foreign key (usuario_id) 
+       references usuarios
+2026-09-15T20:00:31.747-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-15T20:00:35.007-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:gamificacao'
+2026-09-15T20:00:35.116-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-09-15T20:00:35.256-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] acaoContinuadaGamificadaApplicationTests : Started EducacaoContinuadaGamificadaApplicationTests in 12.999 seconds (process running for 16.702)
+Hibernate: 
+    select
+        count(*) 
+    from
+        cursos c1_0
+Hibernate: 
+    insert 
+    into
+        cursos
+        (carga_horaria, descricao, titulo, xp_recompensa, id) 
+    values
+        (?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        cursos
+        (carga_horaria, descricao, titulo, xp_recompensa, id) 
+    values
+        (?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        cursos
+        (carga_horaria, descricao, titulo, xp_recompensa, id) 
+    values
+        (?, ?, ?, ?, default)
+Hibernate: 
+    select
+        count(*) 
+    from
+        badges b1_0
+Hibernate: 
+    insert 
+    into
+        badges
+        (descricao, nome, xp_minimo, id) 
+    values
+        (?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        badges
+        (descricao, nome, xp_minimo, id) 
+    values
+        (?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        badges
+        (descricao, nome, xp_minimo, id) 
+    values
+        (?, ?, ?, default)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\Luis\.m2\repository\net\bytebuddy\byte-buddy-agent\1.15.10\byte-buddy-agent-1.15.10.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 16.09 s -- in br.edu.gamificacao.EducacaoContinuadaGamificadaApplicationTests
+[INFO] Running br.edu.gamificacao.bdd.RunCucumberTest
+2026-09-15T20:00:37.947-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration br.edu.gamificacao.EducacaoContinuadaGamificadaApplication for test class br.edu.gamificacao.bdd.CucumberSpringConfiguration
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.0)
+
+2026-09-15T20:00:38.002-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] b.e.g.bdd.CucumberSpringConfiguration    : Starting CucumberSpringConfiguration using Java 21.0.12.1 with PID 27088 (started by Luis in C:\Users\Luis\Downloads\devops\backend)
+2026-09-15T20:00:38.002-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] b.e.g.bdd.CucumberSpringConfiguration    : The following 1 profile is active: "h2"
+2026-09-15T20:00:38.420-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-15T20:00:38.442-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 19 ms. Found 4 JPA repository interfaces.
+2026-09-15T20:00:38.850-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-09-15T20:00:38.894-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-09-15T20:00:38.895-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
+2026-09-15T20:00:39.060-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-09-15T20:00:39.061-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1055 ms
+2026-09-15T20:00:39.166-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-09-15T20:00:39.167-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection conn10: url=jdbc:h2:mem:gamificacao user=SA
+2026-09-15T20:00:39.168-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-09-15T20:00:39.168-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:gamificacao'
+2026-09-15T20:00:39.379-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-15T20:00:39.390-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-15T20:00:39.412-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-15T20:00:39.415-03:00  WARN 27088 --- [EducacaoContinuadaGamificada] [           main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-09-15T20:00:39.416-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-15T20:00:39.581-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: 
+    alter table if exists matriculas 
+       drop constraint if exists UKtd2ei5iioabkv4d4e323epgig
+Hibernate: 
+    alter table if exists matriculas 
+       add constraint UKtd2ei5iioabkv4d4e323epgig unique (usuario_id, curso_id)
+2026-09-15T20:00:39.599-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-15T20:00:40.640-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-09-15T20:00:40.694-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 60939 (http) with context path '/'
+2026-09-15T20:00:40.700-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] b.e.g.bdd.CucumberSpringConfiguration    : Started CucumberSpringConfiguration in 2.748 seconds (process running for 22.148)
+Hibernate: 
+    select
+        count(*) 
+    from
+        cursos c1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        badges b1_0
+
+Cenario: Aluno se matricula com sucesso em um curso disponivel           # features/matricula.feature:13
+2026-09-15T20:00:41.193-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-15T20:00:41.193-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-09-15T20:00:41.196-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    insert 
+    into
+        usuarios
+        (criado_em, email, nivel, nome, xp, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+  Dado que existe um aluno cadastrado chamado "Ana Souza"                # br.edu.gamificacao.bdd.CommonSteps.queExisteUmAlunoCadastradoChamado(java.lang.String)
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.carga_horaria,
+        c1_0.descricao,
+        c1_0.titulo,
+        c1_0.xp_recompensa 
+    from
+        cursos c1_0
+  E existe o curso "Fundamentos de Spring Boot" disponivel na plataforma # br.edu.gamificacao.bdd.CommonSteps.existeOCursoDisponivelNaPlataforma(java.lang.String)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.carga_horaria,
+        c1_0.descricao,
+        c1_0.titulo,
+        c1_0.xp_recompensa 
+    from
+        cursos c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        m1_0.id,
+        m1_0.concluida,
+        m1_0.curso_id,
+        m1_0.data_conclusao,
+        m1_0.data_matricula,
+        m1_0.usuario_id 
+    from
+        matriculas m1_0 
+    where
+        m1_0.usuario_id=? 
+        and m1_0.curso_id=?
+Hibernate: 
+    insert 
+    into
+        matriculas
+        (concluida, curso_id, data_conclusao, data_matricula, usuario_id, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+  Quando o aluno se matricula no curso "Fundamentos de Spring Boot"      # br.edu.gamificacao.bdd.MatriculaSteps.oAlunoSeMatriculaNoCurso(java.lang.String)
+  Entao a matricula deve ser criada com sucesso                          # br.edu.gamificacao.bdd.MatriculaSteps.aMatriculaDeveSerCriadaComSucesso()
+  E a matricula deve estar com o status "nao concluida"                  # br.edu.gamificacao.bdd.MatriculaSteps.aMatriculaDeveEstarComOStatus(java.lang.String)
+2026-09-15T20:00:41.656-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration br.edu.gamificacao.EducacaoContinuadaGamificadaApplication for test class br.edu.gamificacao.bdd.CucumberSpringConfiguration
+
+Cenario: Aluno nao pode se matricular duas vezes no mesmo curso          # features/matricula.feature:20
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    insert 
+    into
+        usuarios
+        (criado_em, email, nivel, nome, xp, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+  Dado que existe um aluno cadastrado chamado "Bruno Lima"               # br.edu.gamificacao.bdd.CommonSteps.queExisteUmAlunoCadastradoChamado(java.lang.String)
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.carga_horaria,
+        c1_0.descricao,
+        c1_0.titulo,
+        c1_0.xp_recompensa 
+    from
+        cursos c1_0
+  E existe o curso "TDD na Pratica" disponivel na plataforma             # br.edu.gamificacao.bdd.CommonSteps.existeOCursoDisponivelNaPlataforma(java.lang.String)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.carga_horaria,
+        c1_0.descricao,
+        c1_0.titulo,
+        c1_0.xp_recompensa 
+    from
+        cursos c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        m1_0.id,
+        m1_0.concluida,
+        m1_0.curso_id,
+        m1_0.data_conclusao,
+        m1_0.data_matricula,
+        m1_0.usuario_id 
+    from
+        matriculas m1_0 
+    where
+        m1_0.usuario_id=? 
+        and m1_0.curso_id=?
+Hibernate: 
+    insert 
+    into
+        matriculas
+        (concluida, curso_id, data_conclusao, data_matricula, usuario_id, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+  E o aluno ja esta matriculado no curso "TDD na Pratica"                # br.edu.gamificacao.bdd.MatriculaSteps.oAlunoJaEstaMatriculadoNoCurso(java.lang.String)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.carga_horaria,
+        c1_0.descricao,
+        c1_0.titulo,
+        c1_0.xp_recompensa 
+    from
+        cursos c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        m1_0.id,
+        m1_0.concluida,
+        m1_0.curso_id,
+        m1_0.data_conclusao,
+        m1_0.data_matricula,
+        m1_0.usuario_id 
+    from
+        matriculas m1_0 
+    where
+        m1_0.usuario_id=? 
+        and m1_0.curso_id=?
+  Quando o aluno tenta se matricular novamente no curso "TDD na Pratica" # br.edu.gamificacao.bdd.MatriculaSteps.oAlunoTentaSeMatricularNovamenteNoCurso(java.lang.String)
+  Entao a plataforma deve recusar a nova matricula                       # br.edu.gamificacao.bdd.MatriculaSteps.aPlataformaDeveRecusarANovaMatricula()
+2026-09-15T20:00:41.770-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration br.edu.gamificacao.EducacaoContinuadaGamificadaApplication for test class br.edu.gamificacao.bdd.CucumberSpringConfiguration
+
+Cenario: Ranking ordena alunos do maior para o menor XP                            # features/ranking.feature:13
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    insert 
+    into
+        usuarios
+        (criado_em, email, nivel, nome, xp, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    update
+        usuarios 
+    set
+        criado_em=?,
+        email=?,
+        nivel=?,
+        nome=?,
+        xp=? 
+    where
+        id=?
+  Dado que existe um aluno cadastrado chamado "Elisa Prado" com 300 XP             # br.edu.gamificacao.bdd.CommonSteps.queExisteUmAlunoCadastradoChamadoComXp(java.lang.String,int)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    insert 
+    into
+        usuarios
+        (criado_em, email, nivel, nome, xp, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    update
+        usuarios 
+    set
+        criado_em=?,
+        email=?,
+        nivel=?,
+        nome=?,
+        xp=? 
+    where
+        id=?
+  E existe um aluno cadastrado chamado "Fabio Rocha" com 900 XP                    # br.edu.gamificacao.bdd.CommonSteps.existeUmAlunoCadastradoChamadoComXp(java.lang.String,int)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    order by
+        u1_0.xp desc
+  Quando eu consulto o ranking de alunos                                           # br.edu.gamificacao.bdd.RankingSteps.euConsultoORankingDeAlunos()
+  Entao "Fabio Rocha" deve aparecer no ranking em posicao melhor que "Elisa Prado" # br.edu.gamificacao.bdd.RankingSteps.deveAparecerNoRankingEmPosicaoMelhorQue(java.lang.String,java.lang.String)
+2026-09-15T20:00:41.990-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration br.edu.gamificacao.EducacaoContinuadaGamificadaApplication for test class br.edu.gamificacao.bdd.CucumberSpringConfiguration
+
+Cenario: Aluno sem nenhum XP aparece no final do ranking em relacao aos demais      # features/ranking.feature:19
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    insert 
+    into
+        usuarios
+        (criado_em, email, nivel, nome, xp, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+  Dado que existe um aluno cadastrado chamado "Gabriel Dias" com 0 XP               # br.edu.gamificacao.bdd.CommonSteps.queExisteUmAlunoCadastradoChamadoComXp(java.lang.String,int)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    insert 
+    into
+        usuarios
+        (criado_em, email, nivel, nome, xp, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    update
+        usuarios 
+    set
+        criado_em=?,
+        email=?,
+        nivel=?,
+        nome=?,
+        xp=? 
+    where
+        id=?
+  E existe um aluno cadastrado chamado "Helena Melo" com 50 XP                      # br.edu.gamificacao.bdd.CommonSteps.existeUmAlunoCadastradoChamadoComXp(java.lang.String,int)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    order by
+        u1_0.xp desc
+  Quando eu consulto o ranking de alunos                                            # br.edu.gamificacao.bdd.RankingSteps.euConsultoORankingDeAlunos()
+  Entao "Helena Melo" deve aparecer no ranking em posicao melhor que "Gabriel Dias" # br.edu.gamificacao.bdd.RankingSteps.deveAparecerNoRankingEmPosicaoMelhorQue(java.lang.String,java.lang.String)
+2026-09-15T20:00:42.059-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration br.edu.gamificacao.EducacaoContinuadaGamificadaApplication for test class br.edu.gamificacao.bdd.CucumberSpringConfiguration
+
+Cenario: Aluno ganha XP ao concluir um curso                                       # features/xp_e_nivel.feature:13
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    insert 
+    into
+        usuarios
+        (criado_em, email, nivel, nome, xp, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+  Dado que existe um aluno cadastrado chamado "Carla Nunes" com 0 XP               # br.edu.gamificacao.bdd.CommonSteps.queExisteUmAlunoCadastradoChamadoComXp(java.lang.String,int)
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.carga_horaria,
+        c1_0.descricao,
+        c1_0.titulo,
+        c1_0.xp_recompensa 
+    from
+        cursos c1_0
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.carga_horaria,
+        c1_0.descricao,
+        c1_0.titulo,
+        c1_0.xp_recompensa 
+    from
+        cursos c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        m1_0.id,
+        m1_0.concluida,
+        m1_0.curso_id,
+        m1_0.data_conclusao,
+        m1_0.data_matricula,
+        m1_0.usuario_id 
+    from
+        matriculas m1_0 
+    where
+        m1_0.usuario_id=? 
+        and m1_0.curso_id=?
+Hibernate: 
+    insert 
+    into
+        matriculas
+        (concluida, curso_id, data_conclusao, data_matricula, usuario_id, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+  E o aluno esta matriculado no curso "Fundamentos de Spring Boot" que vale 100 XP # br.edu.gamificacao.bdd.XpNivelSteps.oAlunoEstaMatriculadoNoCursoQueValeXp(java.lang.String,int)
+Hibernate: 
+    select
+        m1_0.id,
+        m1_0.concluida,
+        m1_0.curso_id,
+        m1_0.data_conclusao,
+        m1_0.data_matricula,
+        m1_0.usuario_id 
+    from
+        matriculas m1_0 
+    where
+        m1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.carga_horaria,
+        c1_0.descricao,
+        c1_0.titulo,
+        c1_0.xp_recompensa 
+    from
+        cursos c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    update
+        matriculas 
+    set
+        concluida=?,
+        curso_id=?,
+        data_conclusao=?,
+        data_matricula=?,
+        usuario_id=? 
+    where
+        id=?
+Hibernate: 
+    update
+        usuarios 
+    set
+        criado_em=?,
+        email=?,
+        nivel=?,
+        nome=?,
+        xp=? 
+    where
+        id=?
+  Quando o aluno conclui a matricula no curso "Fundamentos de Spring Boot"         # br.edu.gamificacao.bdd.XpNivelSteps.oAlunoConcluiAMatriculaNoCurso(java.lang.String)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+  Entao o aluno deve possuir 100 XP                                                # br.edu.gamificacao.bdd.XpNivelSteps.oAlunoDevePossuirXp(int)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+  E o nivel do aluno deve ser 2                                                    # br.edu.gamificacao.bdd.XpNivelSteps.oNivelDoAlunoDeveSer(int)
+2026-09-15T20:00:42.159-03:00  INFO 27088 --- [EducacaoContinuadaGamificada] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration br.edu.gamificacao.EducacaoContinuadaGamificadaApplication for test class br.edu.gamificacao.bdd.CucumberSpringConfiguration
+
+Cenario: Aluno acumula XP de varios cursos concluidos                           # features/xp_e_nivel.feature:20
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    insert 
+    into
+        usuarios
+        (criado_em, email, nivel, nome, xp, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+  Dado que existe um aluno cadastrado chamado "Diego Alves" com 0 XP            # br.edu.gamificacao.bdd.CommonSteps.queExisteUmAlunoCadastradoChamadoComXp(java.lang.String,int)
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.carga_horaria,
+        c1_0.descricao,
+        c1_0.titulo,
+        c1_0.xp_recompensa 
+    from
+        cursos c1_0
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.carga_horaria,
+        c1_0.descricao,
+        c1_0.titulo,
+        c1_0.xp_recompensa 
+    from
+        cursos c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        m1_0.id,
+        m1_0.concluida,
+        m1_0.curso_id,
+        m1_0.data_conclusao,
+        m1_0.data_matricula,
+        m1_0.usuario_id 
+    from
+        matriculas m1_0 
+    where
+        m1_0.usuario_id=? 
+        and m1_0.curso_id=?
+Hibernate: 
+    insert 
+    into
+        matriculas
+        (concluida, curso_id, data_conclusao, data_matricula, usuario_id, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+  E o aluno esta matriculado no curso "TDD na Pratica" que vale 150 XP          # br.edu.gamificacao.bdd.XpNivelSteps.oAlunoEstaMatriculadoNoCursoQueValeXp(java.lang.String,int)
+Hibernate: 
+    select
+        m1_0.id,
+        m1_0.concluida,
+        m1_0.curso_id,
+        m1_0.data_conclusao,
+        m1_0.data_matricula,
+        m1_0.usuario_id 
+    from
+        matriculas m1_0 
+    where
+        m1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.carga_horaria,
+        c1_0.descricao,
+        c1_0.titulo,
+        c1_0.xp_recompensa 
+    from
+        cursos c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    update
+        matriculas 
+    set
+        concluida=?,
+        curso_id=?,
+        data_conclusao=?,
+        data_matricula=?,
+        usuario_id=? 
+    where
+        id=?
+Hibernate: 
+    update
+        usuarios 
+    set
+        criado_em=?,
+        email=?,
+        nivel=?,
+        nome=?,
+        xp=? 
+    where
+        id=?
+  E o aluno conclui a matricula no curso "TDD na Pratica"                       # br.edu.gamificacao.bdd.XpNivelSteps.oAlunoConcluiAMatriculaNoCurso(java.lang.String)
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.carga_horaria,
+        c1_0.descricao,
+        c1_0.titulo,
+        c1_0.xp_recompensa 
+    from
+        cursos c1_0
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.carga_horaria,
+        c1_0.descricao,
+        c1_0.titulo,
+        c1_0.xp_recompensa 
+    from
+        cursos c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        m1_0.id,
+        m1_0.concluida,
+        m1_0.curso_id,
+        m1_0.data_conclusao,
+        m1_0.data_matricula,
+        m1_0.usuario_id 
+    from
+        matriculas m1_0 
+    where
+        m1_0.usuario_id=? 
+        and m1_0.curso_id=?
+Hibernate: 
+    insert 
+    into
+        matriculas
+        (concluida, curso_id, data_conclusao, data_matricula, usuario_id, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+  E o aluno esta matriculado no curso "BDD e ATDD com Cucumber" que vale 200 XP # br.edu.gamificacao.bdd.XpNivelSteps.oAlunoEstaMatriculadoNoCursoQueValeXp(java.lang.String,int)
+Hibernate: 
+    select
+        m1_0.id,
+        m1_0.concluida,
+        m1_0.curso_id,
+        m1_0.data_conclusao,
+        m1_0.data_matricula,
+        m1_0.usuario_id 
+    from
+        matriculas m1_0 
+    where
+        m1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.carga_horaria,
+        c1_0.descricao,
+        c1_0.titulo,
+        c1_0.xp_recompensa 
+    from
+        cursos c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    update
+        matriculas 
+    set
+        concluida=?,
+        curso_id=?,
+        data_conclusao=?,
+        data_matricula=?,
+        usuario_id=? 
+    where
+        id=?
+Hibernate: 
+    update
+        usuarios 
+    set
+        criado_em=?,
+        email=?,
+        nivel=?,
+        nome=?,
+        xp=? 
+    where
+        id=?
+  Quando o aluno conclui a matricula no curso "BDD e ATDD com Cucumber"         # br.edu.gamificacao.bdd.XpNivelSteps.oAlunoConcluiAMatriculaNoCurso(java.lang.String)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+  Entao o aluno deve possuir 350 XP                                             # br.edu.gamificacao.bdd.XpNivelSteps.oAlunoDevePossuirXp(int)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.criado_em,
+        u1_0.email,
+        u1_0.nivel,
+        u1_0.nome,
+        u1_0.xp 
+    from
+        usuarios u1_0 
+    where
+        u1_0.id=?
+  E o nivel do aluno deve ser 4                                                 # br.edu.gamificacao.bdd.XpNivelSteps.oNivelDoAlunoDeveSer(int)
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.204 s -- in br.edu.gamificacao.bdd.RunCucumberTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jacoco:0.8.13:report (report) @ educacao-continuada-gamificada ---
+[INFO] Loading execution data file C:\Users\Luis\Downloads\devops\backend\target\jacoco.exec
+[INFO] Analyzed bundle 'EducacaoContinuadaGamificada' with 22 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  28.839 s
+[INFO] Finished at: 2026-09-15T20:00:44-03:00
+[INFO] ------------------------------------------------------------------------

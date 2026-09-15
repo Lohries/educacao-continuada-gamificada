@@ -12,7 +12,6 @@ import br.edu.gamificacao.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
@@ -23,8 +22,13 @@ import java.util.UUID;
  * TestRestTemplate injetado pelo Spring Boot ja resolve caminhos relativos
  * para o host/porta corretos, entao nao ha necessidade de @LocalServerPort
  * aqui (isso evitaria a resolucao do placeholder antes do servidor subir).
+ *
+ * Nao e anotada com @Component de proposito: e registrada explicitamente
+ * como bean apenas dentro de {@link CucumberSpringConfiguration}, para nao
+ * ser varrida pelo component scan da aplicacao principal (que exigiria um
+ * TestRestTemplate mesmo em testes @SpringBootTest sem servidor web, como
+ * o EducacaoContinuadaGamificadaApplicationTests padrao).
  */
-@Component
 public class ApiTestHelper {
 
     @Autowired
