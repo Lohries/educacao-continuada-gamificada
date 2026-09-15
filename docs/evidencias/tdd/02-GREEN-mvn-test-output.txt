@@ -1,0 +1,6 @@
+Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.137 s -- in br.edu.gamificacao.domain.ProgressoGamificadoTest
+
+-------------------------------------------------------------------------------
+Test set: br.edu.gamificacao.domain.ProgressoGamificadoTest
+-------------------------------------------------------------------------------
+Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.137 s -- in br.edu.gamificacao.domain.ProgressoGamificadoTest
