@@ -1,0 +1,42 @@
+Feature: Matricula do aluno em um curso
+  Scenario: Aluno se matricula com sucesso em um curso disponivel
+    [passed] que existe um aluno cadastrado chamado "Ana Souza"
+    [passed] existe o curso "Fundamentos de Spring Boot" disponivel na plataforma
+    [passed] o aluno se matricula no curso "Fundamentos de Spring Boot"
+    [passed] a matricula deve ser criada com sucesso
+    [passed] a matricula deve estar com o status "nao concluida"
+  Scenario: Aluno nao pode se matricular duas vezes no mesmo curso
+    [passed] que existe um aluno cadastrado chamado "Bruno Lima"
+    [passed] existe o curso "TDD na Pratica" disponivel na plataforma
+    [passed] o aluno ja esta matriculado no curso "TDD na Pratica"
+    [passed] o aluno tenta se matricular novamente no curso "TDD na Pratica"
+    [passed] a plataforma deve recusar a nova matricula
+Feature: Ranking de alunos por pontuacao (XP)
+  Scenario: Ranking ordena alunos do maior para o menor XP
+    [passed] que existe um aluno cadastrado chamado "Elisa Prado" com 300 XP
+    [passed] existe um aluno cadastrado chamado "Fabio Rocha" com 900 XP
+    [passed] eu consulto o ranking de alunos
+    [passed] "Fabio Rocha" deve aparecer no ranking em posicao melhor que "Elisa Prado"
+  Scenario: Aluno sem nenhum XP aparece no final do ranking em relacao aos demais
+    [passed] que existe um aluno cadastrado chamado "Gabriel Dias" com 0 XP
+    [passed] existe um aluno cadastrado chamado "Helena Melo" com 50 XP
+    [passed] eu consulto o ranking de alunos
+    [passed] "Helena Melo" deve aparecer no ranking em posicao melhor que "Gabriel Dias"
+Feature: Ganho de XP e evolucao de nivel do aluno
+  Scenario: Aluno ganha XP ao concluir um curso
+    [passed] que existe um aluno cadastrado chamado "Carla Nunes" com 0 XP
+    [passed] o aluno esta matriculado no curso "Fundamentos de Spring Boot" que vale 100 XP
+    [passed] o aluno conclui a matricula no curso "Fundamentos de Spring Boot"
+    [passed] o aluno deve possuir 100 XP
+    [passed] o nivel do aluno deve ser 2
+  Scenario: Aluno acumula XP de varios cursos concluidos
+    [passed] que existe um aluno cadastrado chamado "Diego Alves" com 0 XP
+    [passed] o aluno esta matriculado no curso "TDD na Pratica" que vale 150 XP
+    [passed] o aluno conclui a matricula no curso "TDD na Pratica"
+    [passed] o aluno esta matriculado no curso "BDD e ATDD com Cucumber" que vale 200 XP
+    [passed] o aluno conclui a matricula no curso "BDD e ATDD com Cucumber"
+    [passed] o aluno deve possuir 350 XP
+    [passed] o nivel do aluno deve ser 4
+
+TOTAL scenarios: 6
+TOTAL steps: 30 passed: 30
