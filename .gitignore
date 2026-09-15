@@ -1,0 +1,23 @@
+# JDK portatil usado apenas localmente para rodar os testes (nao versionar)
+/tools/
+
+# Backend (Maven)
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# Frontend (Node/Vite)
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+out/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker volumes locais
+pgdata/

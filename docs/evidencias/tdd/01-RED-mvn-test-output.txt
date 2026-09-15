@@ -1,0 +1,140 @@
+[ERROR] Tests run: 14, Failures: 0, Errors: 14, Skipped: 0, Time elapsed: 0.140 s <<< FAILURE! -- in br.edu.gamificacao.domain.ProgressoGamificadoTest
+[ERROR] br.edu.gamificacao.domain.ProgressoGamificadoTest.naoDeveDesbloquearBadgeAntesDoLimiar -- Time elapsed: 0.038 s <<< ERROR!
+java.lang.UnsupportedOperationException: ainda nao implementado
+	at br.edu.gamificacao.domain.ProgressoGamificado.<init>(ProgressoGamificado.java:13)
+	at br.edu.gamificacao.domain.ProgressoGamificadoTest.setUp(ProgressoGamificadoTest.java:27)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] br.edu.gamificacao.domain.ProgressoGamificadoTest.deveDesbloquearBadgeIniciante -- Time elapsed: 0.004 s <<< ERROR!
+java.lang.UnsupportedOperationException: ainda nao implementado
+	at br.edu.gamificacao.domain.ProgressoGamificado.<init>(ProgressoGamificado.java:13)
+	at br.edu.gamificacao.domain.ProgressoGamificadoTest.setUp(ProgressoGamificadoTest.java:27)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] br.edu.gamificacao.domain.ProgressoGamificadoTest.naoDevePermitirNomeEmBranco -- Time elapsed: 0.003 s <<< ERROR!
+java.lang.UnsupportedOperationException: ainda nao implementado
+	at br.edu.gamificacao.domain.ProgressoGamificado.<init>(ProgressoGamificado.java:13)
+	at br.edu.gamificacao.domain.ProgressoGamificadoTest.setUp(ProgressoGamificadoTest.java:27)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] br.edu.gamificacao.domain.ProgressoGamificadoTest.deveCompararPorXpParaRanking -- Time elapsed: 0.003 s <<< ERROR!
+java.lang.UnsupportedOperationException: ainda nao implementado
+	at br.edu.gamificacao.domain.ProgressoGamificado.<init>(ProgressoGamificado.java:13)
+	at br.edu.gamificacao.domain.ProgressoGamificadoTest.setUp(ProgressoGamificadoTest.java:27)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] br.edu.gamificacao.domain.ProgressoGamificadoTest.deveAdicionarXp -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: ainda nao implementado
+	at br.edu.gamificacao.domain.ProgressoGamificado.<init>(ProgressoGamificado.java:13)
+	at br.edu.gamificacao.domain.ProgressoGamificadoTest.setUp(ProgressoGamificadoTest.java:27)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] br.edu.gamificacao.domain.ProgressoGamificadoTest.deveReiniciarTrilha -- Time elapsed: 0.004 s <<< ERROR!
+java.lang.UnsupportedOperationException: ainda nao implementado
+	at br.edu.gamificacao.domain.ProgressoGamificado.<init>(ProgressoGamificado.java:13)
+	at br.edu.gamificacao.domain.ProgressoGamificadoTest.setUp(ProgressoGamificadoTest.java:27)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] br.edu.gamificacao.domain.ProgressoGamificadoTest.deveSubirDeNivelACada100Xp -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: ainda nao implementado
+	at br.edu.gamificacao.domain.ProgressoGamificado.<init>(ProgressoGamificado.java:13)
+	at br.edu.gamificacao.domain.ProgressoGamificadoTest.setUp(ProgressoGamificadoTest.java:27)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] br.edu.gamificacao.domain.ProgressoGamificadoTest.deveDesbloquearBadgeAvancado -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: ainda nao implementado
+	at br.edu.gamificacao.domain.ProgressoGamificado.<init>(ProgressoGamificado.java:13)
+	at br.edu.gamificacao.domain.ProgressoGamificadoTest.setUp(ProgressoGamificadoTest.java:27)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] br.edu.gamificacao.domain.ProgressoGamificadoTest.deveConsiderarEmpateNoRanking -- Time elapsed: 0.001 s <<< ERROR!
+java.lang.UnsupportedOperationException: ainda nao implementado
+	at br.edu.gamificacao.domain.ProgressoGamificado.<init>(ProgressoGamificado.java:13)
+	at br.edu.gamificacao.domain.ProgressoGamificadoTest.setUp(ProgressoGamificadoTest.java:27)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] br.edu.gamificacao.domain.ProgressoGamificadoTest.naoDevePermitirXpInvalido -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: ainda nao implementado
+	at br.edu.gamificacao.domain.ProgressoGamificado.<init>(ProgressoGamificado.java:13)
+	at br.edu.gamificacao.domain.ProgressoGamificadoTest.setUp(ProgressoGamificadoTest.java:27)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] br.edu.gamificacao.domain.ProgressoGamificadoTest.deveIniciarSemBadges -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: ainda nao implementado
+	at br.edu.gamificacao.domain.ProgressoGamificado.<init>(ProgressoGamificado.java:13)
+	at br.edu.gamificacao.domain.ProgressoGamificadoTest.setUp(ProgressoGamificadoTest.java:27)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] br.edu.gamificacao.domain.ProgressoGamificadoTest.deveCalcularNivelDeFormaPura -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: ainda nao implementado
+	at br.edu.gamificacao.domain.ProgressoGamificado.<init>(ProgressoGamificado.java:13)
+	at br.edu.gamificacao.domain.ProgressoGamificadoTest.setUp(ProgressoGamificadoTest.java:27)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] br.edu.gamificacao.domain.ProgressoGamificadoTest.deveDesbloquearBadgeIntermediario -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: ainda nao implementado
+	at br.edu.gamificacao.domain.ProgressoGamificado.<init>(ProgressoGamificado.java:13)
+	at br.edu.gamificacao.domain.ProgressoGamificadoTest.setUp(ProgressoGamificadoTest.java:27)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] br.edu.gamificacao.domain.ProgressoGamificadoTest.deveIniciarComXpZeroENivelUm -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: ainda nao implementado
+	at br.edu.gamificacao.domain.ProgressoGamificado.<init>(ProgressoGamificado.java:13)
+	at br.edu.gamificacao.domain.ProgressoGamificadoTest.setUp(ProgressoGamificadoTest.java:27)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] Errors: 
+[ERROR]   ProgressoGamificadoTest.setUp:27 » UnsupportedOperation ainda nao implementado
+[ERROR]   ProgressoGamificadoTest.setUp:27 » UnsupportedOperation ainda nao implementado
+[ERROR]   ProgressoGamificadoTest.setUp:27 » UnsupportedOperation ainda nao implementado
+[ERROR]   ProgressoGamificadoTest.setUp:27 » UnsupportedOperation ainda nao implementado
+[ERROR]   ProgressoGamificadoTest.setUp:27 » UnsupportedOperation ainda nao implementado
+[ERROR]   ProgressoGamificadoTest.setUp:27 » UnsupportedOperation ainda nao implementado
+[ERROR]   ProgressoGamificadoTest.setUp:27 » UnsupportedOperation ainda nao implementado
+[ERROR]   ProgressoGamificadoTest.setUp:27 » UnsupportedOperation ainda nao implementado
+[ERROR]   ProgressoGamificadoTest.setUp:27 » UnsupportedOperation ainda nao implementado
+[ERROR]   ProgressoGamificadoTest.setUp:27 » UnsupportedOperation ainda nao implementado
+[ERROR]   ProgressoGamificadoTest.setUp:27 » UnsupportedOperation ainda nao implementado
+[ERROR]   ProgressoGamificadoTest.setUp:27 » UnsupportedOperation ainda nao implementado
+[ERROR]   ProgressoGamificadoTest.setUp:27 » UnsupportedOperation ainda nao implementado
+[ERROR]   ProgressoGamificadoTest.setUp:27 » UnsupportedOperation ainda nao implementado
+[ERROR] Tests run: 14, Failures: 0, Errors: 14, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.2:test (default-test) on project educacao-continuada-gamificada: 
+[ERROR] 
+[ERROR] See C:\Users\Luis\Downloads\devops\backend\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
