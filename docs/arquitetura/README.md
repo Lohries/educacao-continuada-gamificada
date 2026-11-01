@@ -58,6 +58,9 @@ Tudo isso mantendo confiabilidade, testabilidade, observabilidade e evolução c
 | ASR-06 | Tolerância a falhas da IA (Reliability) | 3 | Comunicação/operação: fronteira de processo, timeout, circuit breaker, fallback | [ADR-003](../adr/ADR-003-servico-python-de-ia.md) | `RecomendacaoDegradadaTest`; mini-lab com kill do Python |
 | ASR-07 | Deploy independente da IA (Supportability) | 3 | Implantação: artefato e container próprios | [ADR-003](../adr/ADR-003-servico-python-de-ia.md) | `ia-service/Dockerfile`; serviço no `docker compose` |
 | ASR-08 | Escalabilidade elástica da IA (Performance) | 3 | Implantação: réplicas da IA sem escalar o Core | [ADR-003](../adr/ADR-003-servico-python-de-ia.md) | Serviço sem estado (sem banco, sem sessão) |
+| ASR-09 | Tolerância a falhas do fluxo de conclusão (Reliability) | 4 | Comunicação: consumidores assíncronos depois do commit | [ADR-004](../adr/ADR-004-eventos-de-conclusao.md) | `EventosConclusaoTest`; mini-lab com o provedor fora |
+| ASR-10 | Recuperabilidade, sem perda de eventos (Reliability) | 4 | Dados/operação: evento persistido na transação (outbox) e reentregue | [ADR-004](../adr/ADR-004-eventos-de-conclusao.md) | Evento pendente → reprocessado em ~12 s |
+| ASR-11 | Desacoplamento produtor/consumidores (Supportability) | 4 | Estrutura: contrato `CursoConcluido`; `matricula` não conhece `notificacao` | [ADR-004](../adr/ADR-004-eventos-de-conclusao.md) | `ModularidadeTest` (sem ciclo) |
 
 ---
 
@@ -350,3 +353,141 @@ Suíte completa: **45/45** no Java ([log](evidencias/desafio-3/testes-desafio-3.
 | Python religado + 16 s | Recomendação volta a `origem=ia`, circuito `CLOSED` |
 
 **Conclusão:** a fronteira de processo mais timeout, circuit breaker e fallback fez a queda da IA virar degradação controlada. Com o circuito aberto, o Core nem tenta chamar o serviço, então não acumula espera. A recuperação é automática. O custo aceito é a latência de rede e o catálogo enviado a cada pedido. Com catálogos grandes, o ia-service vai precisar de um índice próprio, alimentado por eventos.
+
+---
+
+## Desafio 4 — Comunicação e eventos
+
+**Pergunta:** o que precisa ser síncrono na conclusão de um curso, o que pode ser eventual, e um broker resolve um problema real do fluxo?
+
+### RF / RNF
+
+- **RFs:** RF02 Conquistas e RF05 Notificações, mais o evento de conclusão de atividade.
+- **RNFs analisados:**
+  - tolerância a falhas, disponibilidade e recuperabilidade (Reliability);
+  - latência (Performance);
+  - consistência;
+  - desacoplamento (Supportability).
+
+### O que é imediato e o que é eventual
+
+| Passo da conclusão | Imediato? | Motivo |
+|---|---|---|
+| Registrar a conclusão | **Sim** | Operação essencial |
+| XP, nível e badges | **Sim** | O aluno vê o XP na resposta; consistência forte entre a conclusão e o XP |
+| Notificação | Não, eventual | Provedor externo que falha; pode chegar segundos depois |
+| Analytics e índice da IA (futuros) | Não, eventual | Não fazem parte da resposta |
+
+### ASR (máx. 3)
+
+| RNF | ASR? | Por quê |
+|---|---|---|
+| Tolerância a falhas | **Sim (ASR-09)** | Uma falha do consumidor não pode desfazer a conclusão (**comunicação**) |
+| Recuperabilidade | **Sim (ASR-10)** | Com o consumidor fora, o evento não pode se perder (**dados/operação**) |
+| Desacoplamento | **Sim (ASR-11)** | Novos consumidores não podem exigir mudança em `matricula` (**estrutura**) |
+| Latência | Não | Melhora como consequência: a notificação sai da resposta |
+| Disponibilidade | Não separado | Coberta pelo ASR-09 |
+| Consistência | Não | Resolvida por passo: forte para o XP, eventual para o resto |
+
+### RPC
+
+- As operações essenciais concluem mesmo com um consumidor indisponível.
+- Um broker tem custo operacional.
+- Deploy único (ADR-001).
+
+### Alternativas e trade-offs
+
+| | A — Tudo REST síncrono | B — Evento em memória | **C — Evento persistido (outbox) + listener assíncrono** | D — RabbitMQ/Kafka |
+|---|---|---|---|---|
+| Falha da notificação afeta a conclusão? | **Sim: desfaz tudo** (teste) | Não | **Não** | Não |
+| Evento se perde se o consumidor falhar? | — | **Sim** | **Não (reentrega)** | Não |
+| Componente novo para operar | Nenhum | Nenhum | **Nenhum** (tabela no banco atual) | Broker |
+| Consumidores fora do processo | — | Não | Não | Sim |
+
+**RabbitMQ × Kafka, pelo problema do case:**
+- O fluxo é comando/notificação com poucos consumidores e entrega pelo menos uma vez, o perfil do RabbitMQ.
+- O Kafka se justificaria por um log retido, reprocessamento de histórico ou alto throughput, como analytics do *learning record*.
+
+Hoje todos os consumidores estão no Core, então **nenhum dos dois resolve um problema real ainda**.
+
+### Decisão — [ADR-004](../adr/ADR-004-eventos-de-conclusao.md)
+
+- A conclusão e o XP continuam síncronos, na mesma transação.
+- `matricula` publica `CursoConcluido`, que o **Event Publication Registry** do Spring Modulith grava na mesma transação (tabela `event_publication`).
+- O módulo **`notificacao`** consome com `@ApplicationModuleListener`, de forma assíncrona e depois do commit.
+- A falha fica registrada como publicação incompleta, que o `ReprocessadorDeEventos` reentrega a cada 15 s.
+- O consumidor é idempotente (`matricula_id` único).
+- **Broker adiado.** O gatilho é o primeiro consumidor fora do processo do Core. Nesse ponto, o Spring Modulith externaliza o mesmo evento para RabbitMQ ou Kafka, sem mudar o produtor.
+
+### C4 — Container + sequência do fluxo crítico
+
+```mermaid
+flowchart LR
+    front["Front-end Web<br/>[Vue 3]"]
+    subgraph core["Core Gamificação [Spring Boot 3.4]"]
+        direction TB
+        mat["matricula"]
+        conq["conquista"]
+        notif["notificacao<br/>(listener assíncrono)"]
+        mat -->|"síncrono: concederXp"| conq
+        mat -.->|"evento CursoConcluido<br/>(assíncrono, após commit)"| notif
+    end
+    db[("PostgreSQL<br/>tabelas + event_publication")]
+    prov["Provedor de notificação<br/>[Sistema externo: e-mail/push]"]
+    front -->|REST| core
+    core -->|JPA| db
+    notif -->|envio| prov
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant A as Aluno (front-end)
+    participant M as matricula
+    participant C as conquista
+    participant R as event_publication
+    participant N as notificacao
+    participant P as Provedor externo
+    A->>M: POST /api/matriculas/{id}/concluir
+    rect rgb(230, 245, 230)
+    note over M,R: uma transação
+    M->>M: marca concluída
+    M->>C: concederXp (síncrono)
+    M->>R: grava CursoConcluido (outbox)
+    end
+    M-->>A: 200 + XP já atualizado
+    R-)N: entrega assíncrona após o commit
+    N->>P: envia notificação
+    alt provedor fora
+        P--xN: erro
+        note over R: publicação fica incompleta
+        R-)N: reentrega a cada 15 s
+        N->>P: envia (provedor de volta)
+    end
+    N->>R: marca publicação completa
+```
+
+### Evidência (mini-lab)
+
+**Hipótese:** com a notificação assíncrona sobre um evento persistido, a falha do consumidor não afeta a conclusão, e nenhuma notificação se perde.
+
+**Testes** ([`EventosConclusaoTest`](../../backend/src/test/java/br/edu/gamificacao/notificacao/EventosConclusaoTest.java)):
+
+| Cenário | Resultado |
+|---|---|
+| Consumidor no ar | XP gravado no retorno de `concluir`; notificação entregue em seguida; 0 pendentes |
+| Consumidor fora | Conclusão e XP gravados; **1 evento pendente**; nenhuma notificação. Com o consumidor de volta e reentrega: notificação entregue, 0 pendentes |
+| **Contraste síncrono:** notificação chamada dentro da transação | A falha **desfaz** a conclusão, o XP e o próprio evento (rollback) |
+
+Suíte completa: **48/48** ([log](evidencias/desafio-4/testes-desafio-4.log)).
+
+**Mini-lab pela API real** ([script](evidencias/desafio-4/mini-lab.sh), [log](evidencias/desafio-4/mini-lab.log)):
+
+| Passo | Observado |
+|---|---|
+| Concluir o curso 1 com o consumidor no ar | HTTP 200 em 128 ms, XP 100 já na resposta; notificação entregue; `pendentes=0` |
+| Provedor de notificação derrubado (`/api/lab/notificacao?indisponivel=true`) | — |
+| Concluir o curso 2 com o consumidor fora | **HTTP 200 em 23 ms**, XP 250; nenhuma notificação nova; **`pendentes=1`**; erro só no log do listener |
+| Provedor religado | O reprocessamento automático entregou em **~12 s**; 2 notificações; `pendentes=0` |
+
+**Conclusão:** separar o síncrono (conclusão + XP) do eventual (notificação) atendeu aos três ASRs. O outbox do Spring Modulith dá a garantia de entrega que um broker daria, para consumidores no mesmo processo, sem nenhum componente novo para operar. O broker fica reservado para quando aparecer um consumidor remoto.

@@ -3,14 +3,16 @@ package br.edu.gamificacao.matricula;
 import br.edu.gamificacao.conquista.ConquistaService;
 import br.edu.gamificacao.curso.Curso;
 import br.edu.gamificacao.curso.CursoService;
-import br.edu.gamificacao.usuario.UsuarioService;
-import br.edu.gamificacao.usuario.Usuario;
 import br.edu.gamificacao.matricula.internal.MatriculaRepository;
 import br.edu.gamificacao.shared.RecursoNaoEncontradoException;
 import br.edu.gamificacao.shared.RegraDeNegocioException;
+import br.edu.gamificacao.usuario.Usuario;
+import br.edu.gamificacao.usuario.UsuarioService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,6 +20,10 @@ import java.util.List;
  * Matricula de um aluno em um curso e conclusao da trilha, que concede XP
  * (US de Mathues de Luzia Souza - matricula / inicio de trilha; e de
  * Emanuel Ronaldo Gomes de Souza - ganho de XP ao concluir).
+ *
+ * A conclusao e o XP sao sincronos (mesma transacao, resposta imediata);
+ * notificacao e demais consumidores recebem o evento {@link CursoConcluido}
+ * de forma assincrona (ADR-004).
  */
 @Service
 public class MatriculaService {
@@ -26,15 +32,18 @@ public class MatriculaService {
     private final UsuarioService usuarioService;
     private final CursoService cursoService;
     private final ConquistaService conquistaService;
+    private final ApplicationEventPublisher eventos;
 
     public MatriculaService(MatriculaRepository matriculaRepository,
                              UsuarioService usuarioService,
                              CursoService cursoService,
-                             ConquistaService conquistaService) {
+                             ConquistaService conquistaService,
+                             ApplicationEventPublisher eventos) {
         this.matriculaRepository = matriculaRepository;
         this.usuarioService = usuarioService;
         this.cursoService = cursoService;
         this.conquistaService = conquistaService;
+        this.eventos = eventos;
     }
 
     @Transactional
@@ -68,7 +77,12 @@ public class MatriculaService {
         matricula.setDataConclusao(LocalDateTime.now());
         matriculaRepository.save(matricula);
 
-        conquistaService.concederXp(matricula.getUsuario().getId(), matricula.getCurso().getXpRecompensa());
+        int xp = matricula.getCurso().getXpRecompensa();
+        conquistaService.concederXp(matricula.getUsuario().getId(), xp);
+
+        // gravado na mesma transacao pelo Event Publication Registry (outbox)
+        eventos.publishEvent(new CursoConcluido(matricula.getId(), matricula.getUsuario().getId(),
+                matricula.getCurso().getId(), matricula.getCurso().getTitulo(), xp, Instant.now()));
 
         return matricula;
     }

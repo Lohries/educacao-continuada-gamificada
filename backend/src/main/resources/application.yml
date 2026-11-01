@@ -41,3 +41,12 @@ resilience4j:
         wait-duration-in-open-state: 15s
         permitted-number-of-calls-in-half-open-state: 1
         automatic-transition-from-open-to-half-open-enabled: true
+
+# Eventos de conclusao (ADR-004): reentrega dos eventos cujo consumidor falhou
+notificacao:
+  reprocessar-a-cada-ms: ${NOTIFICACAO_REPROCESSAR_MS:15000}
+  reprocessar-apos-ms: 10000
+
+# Endpoints de simulacao de falha do mini-lab; desligados por padrao
+lab:
+  habilitado: ${LAB_HABILITADO:false}

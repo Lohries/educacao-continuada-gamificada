@@ -1,0 +1,48 @@
+
+== 15:35:52 Subindo o Core (h2) na porta 8081: lab habilitado, reprocessamento a cada 5 s (eventos com 10 s ou mais)
+{"status":"UP"}
+   -> HTTP 200 em 0.051684s
+
+== 15:36:11 1) Consumidor no ar: concluir curso 1
+{"id":1,"usuarioId":1,"nomeUsuario":"Aluno Eventos","cursoId":1,"tituloCurso":"Fundamentos de Spring Boot","dataMatricula":"2026-11-01T15:36:12.141325","concluida":true,"dataConclusao":"2026-11-01T15:36:12.3017597"}
+   -> HTTP 200 em 0.128167s
+   XP logo apos a resposta (sincrono):
+{"id":1,"nome":"Aluno Eventos","email":"eventos@teste.com","xp":100,"nivel":2,"criadoEm":"2026-11-01T15:36:11.752897"}
+   -> HTTP 200 em 0.097813s
+   notificacoes (assincrono):
+[{"matriculaId":1,"mensagem":"Parabens! Voce concluiu \"Fundamentos de Spring Boot\" e ganhou 100 XP.","enviadaEm":"2026-11-01T18:36:12.409045Z"}]
+   -> HTTP 200 em 0.111306s
+{"pendentes":0}
+   -> HTTP 200 em 0.031508s
+
+== 15:36:13 2) Derrubando o provedor de notificacao (consumidor indisponivel)
+{"indisponivel":true}
+   -> HTTP 200 em 0.008779s
+
+== 15:36:14 3) Concluir curso 2 com o consumidor fora: a conclusao responde normalmente
+{"id":2,"usuarioId":1,"nomeUsuario":"Aluno Eventos","cursoId":2,"tituloCurso":"TDD na Pratica","dataMatricula":"2026-11-01T15:36:14.146294","concluida":true,"dataConclusao":"2026-11-01T15:36:14.2457636"}
+   -> HTTP 200 em 0.023374s
+   XP ja atualizado (sincrono):
+{"id":1,"nome":"Aluno Eventos","email":"eventos@teste.com","xp":250,"nivel":3,"criadoEm":"2026-11-01T15:36:11.752897"}
+   -> HTTP 200 em 0.019286s
+   notificacoes: continua so a do curso 1
+[{"matriculaId":1,"mensagem":"Parabens! Voce concluiu \"Fundamentos de Spring Boot\" e ganhou 100 XP.","enviadaEm":"2026-11-01T18:36:12.409045Z"}]
+   -> HTTP 200 em 0.017835s
+   evento da conclusao 2 guardado como pendente:
+{"pendentes":1}
+   -> HTTP 200 em 0.006242s
+
+== 15:36:15 4) Erro do consumidor no log do Core (a conclusao nao foi afetada)
+2026-11-01T15:36:14.265-03:00  INFO 43076 --- [EducacaoContinuadaGamificada] [         task-2] r$CompletionRegisteringMethodInterceptor : Invocation of listener public void br.edu.gamificacao.notifica...
+java.lang.IllegalStateException: provedor de notificacao indisponivel
+
+== 15:36:15 5) Religando o provedor e aguardando o reprocessamento automatico
+{"indisponivel":false}
+   -> HTTP 200 em 0.011185s
+   pendentes=0 apos ~12 s
+[{"matriculaId":1,"mensagem":"Parabens! Voce concluiu \"Fundamentos de Spring Boot\" e ganhou 100 XP.","enviadaEm":"2026-11-01T18:36:12.409045Z"},{"matriculaId":2,"mensagem":"Parabens! Voce concluiu \"TDD na Pratica\" e ganhou 150 XP.","enviadaEm":"2026-11-01T18:36:25.290057Z"}]
+   -> HTTP 200 em 0.007169s
+{"pendentes":0}
+   -> HTTP 200 em 0.005938s
+
+== 15:36:26 Fim do mini-lab

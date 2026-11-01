@@ -57,6 +57,11 @@
 			<groupId>org.springframework.modulith</groupId>
 			<artifactId>spring-modulith-starter-core</artifactId>
 		</dependency>
+		<!-- Event Publication Registry em JPA: eventos persistidos com a transacao (ADR-004) -->
+		<dependency>
+			<groupId>org.springframework.modulith</groupId>
+			<artifactId>spring-modulith-starter-jpa</artifactId>
+		</dependency>
 
 		<!-- Chamada ao ia-service com circuit breaker e fallback (ADR-003) -->
 		<dependency>
