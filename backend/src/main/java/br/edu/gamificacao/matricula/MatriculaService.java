@@ -8,6 +8,8 @@ import br.edu.gamificacao.shared.RecursoNaoEncontradoException;
 import br.edu.gamificacao.shared.RegraDeNegocioException;
 import br.edu.gamificacao.usuario.Usuario;
 import br.edu.gamificacao.usuario.UsuarioService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,17 +35,20 @@ public class MatriculaService {
     private final CursoService cursoService;
     private final ConquistaService conquistaService;
     private final ApplicationEventPublisher eventos;
+    private final Counter conclusoes;
 
     public MatriculaService(MatriculaRepository matriculaRepository,
                              UsuarioService usuarioService,
                              CursoService cursoService,
                              ConquistaService conquistaService,
-                             ApplicationEventPublisher eventos) {
+                             ApplicationEventPublisher eventos,
+                             MeterRegistry metricas) {
         this.matriculaRepository = matriculaRepository;
         this.usuarioService = usuarioService;
         this.cursoService = cursoService;
         this.conquistaService = conquistaService;
         this.eventos = eventos;
+        this.conclusoes = metricas.counter("gamificacao.conclusoes");
     }
 
     @Transactional
@@ -84,6 +89,7 @@ public class MatriculaService {
         eventos.publishEvent(new CursoConcluido(matricula.getId(), matricula.getUsuario().getId(),
                 matricula.getCurso().getId(), matricula.getCurso().getTitulo(), xp, Instant.now()));
 
+        conclusoes.increment();
         return matricula;
     }
 

@@ -8,6 +8,7 @@ import br.edu.gamificacao.recomendacao.internal.IaServiceClient;
 import br.edu.gamificacao.recomendacao.internal.IaServiceClient.CursoIa;
 import br.edu.gamificacao.recomendacao.internal.IaServiceClient.DocumentoIa;
 import br.edu.gamificacao.usuario.UsuarioService;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,13 +35,21 @@ public class RecomendacaoService {
     private final UsuarioService usuarioService;
     private final CursoService cursoService;
     private final MatriculaService matriculaService;
+    private final MeterRegistry metricas;
 
     public RecomendacaoService(IaServiceClient ia, UsuarioService usuarioService,
-                               CursoService cursoService, MatriculaService matriculaService) {
+                               CursoService cursoService, MatriculaService matriculaService,
+                               MeterRegistry metricas) {
         this.ia = ia;
         this.usuarioService = usuarioService;
         this.cursoService = cursoService;
         this.matriculaService = matriculaService;
+        this.metricas = metricas;
+    }
+
+    /** Metrica ia_respostas_total{recurso, origem}: evidencia do ADR-003 no Grafana (ADR-006). */
+    private void contar(String recurso, String origem) {
+        metricas.counter("ia.respostas", "recurso", recurso, "origem", origem).increment();
     }
 
     public Recomendacoes recomendar(Long usuarioId) {
@@ -56,11 +65,13 @@ public class RecomendacaoService {
                     usuarioId, List.copyOf(concluidos),
                     catalogo.stream().map(c -> new CursoIa(c.getId(), c.getTitulo(), c.getDescricao(), c.getXpRecompensa())).toList(),
                     LIMITE));
+            contar("recomendacao", "ia");
             return new Recomendacoes("ia", false, resposta.modelo(), resposta.itens().stream()
                     .map(i -> new Recomendacoes.CursoRecomendado(i.cursoId(), i.titulo(), i.pontuacao(), i.motivo()))
                     .toList());
         } catch (RuntimeException e) {
             log.warn("ia-service indisponivel para recomendacao, usando fallback: {}", e.toString());
+            contar("recomendacao", "fallback");
             return recomendacaoPadrao(catalogo, concluidos);
         }
     }
@@ -71,10 +82,12 @@ public class RecomendacaoService {
                 .toList();
         try {
             var resposta = ia.perguntar(new IaServiceClient.PedidoPergunta(pergunta, documentos));
+            contar("assistente", "ia");
             return new RespostaAssistente("ia", false, resposta.resposta(),
                     resposta.fontes().stream().map(IaServiceClient.FonteIa::titulo).toList());
         } catch (RuntimeException e) {
             log.warn("ia-service indisponivel para o assistente: {}", e.toString());
+            contar("assistente", "fallback");
             return new RespostaAssistente("fallback", true,
                     "O assistente esta temporariamente indisponivel. Matriculas, conclusoes e ranking continuam funcionando normalmente.",
                     List.of());

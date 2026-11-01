@@ -1,0 +1,40 @@
+// Pipeline do gateway IoT (ADR-005/ADR-006).
+pipeline {
+    agent any
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+        disableConcurrentBuilds()
+    }
+    environment {
+        IMAGEM = "gamificacao-iot-gateway:${env.BUILD_NUMBER}"
+    }
+    stages {
+        stage('Testes') {
+            steps {
+                dir('iot') {
+                    sh '''
+                        python3 -m venv .venv
+                        .venv/bin/pip install -q -r requirements-dev.txt
+                        cd gateway && ../.venv/bin/python -m pytest -q --junitxml=relatorio-pytest.xml
+                    '''
+                }
+            }
+            post {
+                always {
+                    junit 'iot/gateway/relatorio-pytest.xml'
+                }
+            }
+        }
+        stage('Imagem Docker') {
+            steps {
+                sh 'docker build -q -t $IMAGEM -f iot/gateway/Dockerfile iot'
+            }
+        }
+        stage('Smoke test da imagem') {
+            // sem broker no pipeline: valida que a imagem tem o codigo e as dependencias
+            steps {
+                sh 'docker run --rm $IMAGEM python -c "import gateway, tradutor; print(\'gateway ok\')"'
+            }
+        }
+    }
+}

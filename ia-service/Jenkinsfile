@@ -1,0 +1,53 @@
+// Pipeline do ia-service (ADR-003/ADR-006): ciclo de deploy proprio, independente do Core.
+pipeline {
+    agent any
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+        disableConcurrentBuilds()
+    }
+    environment {
+        IMAGEM = "gamificacao-ia-service:${env.BUILD_NUMBER}"
+        SMOKE = "smoke-ia-${env.BUILD_NUMBER}"
+    }
+    stages {
+        stage('Testes') {
+            steps {
+                dir('ia-service') {
+                    sh '''
+                        python3 -m venv .venv
+                        .venv/bin/pip install -q -r requirements-dev.txt
+                        .venv/bin/python -m pytest -q --junitxml=relatorio-pytest.xml
+                    '''
+                }
+            }
+            post {
+                always {
+                    junit 'ia-service/relatorio-pytest.xml'
+                }
+            }
+        }
+        stage('Imagem Docker') {
+            steps {
+                sh 'docker build -q -t $IMAGEM ia-service'
+            }
+        }
+        stage('Smoke test da imagem') {
+            steps {
+                sh '''
+                    docker rm -f $SMOKE >/dev/null 2>&1 || true
+                    docker run -d --name $SMOKE $IMAGEM
+                    for i in $(seq 1 30); do
+                        docker exec $SMOKE python -c "import urllib.request;print(urllib.request.urlopen('http://localhost:8000/health').read().decode())" && break
+                        sleep 1
+                    done
+                    docker exec $SMOKE python -c "import urllib.request;t=urllib.request.urlopen('http://localhost:8000/metrics').read().decode();assert 'http_requests_total' in t;print('metrics ok')"
+                '''
+            }
+            post {
+                always {
+                    sh 'docker rm -f $SMOKE >/dev/null 2>&1 || true'
+                }
+            }
+        }
+    }
+}

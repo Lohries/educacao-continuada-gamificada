@@ -1,6 +1,8 @@
 package br.edu.gamificacao.notificacao;
 
 import br.edu.gamificacao.notificacao.internal.NotificacaoRepository;
+import io.micrometer.core.instrument.Gauge;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +19,12 @@ public class NotificacaoService {
     private final NotificacaoRepository notificacoes;
     private final JdbcTemplate jdbc;
 
-    public NotificacaoService(NotificacaoRepository notificacoes, JdbcTemplate jdbc) {
+    public NotificacaoService(NotificacaoRepository notificacoes, JdbcTemplate jdbc, MeterRegistry metricas) {
         this.notificacoes = notificacoes;
         this.jdbc = jdbc;
+        Gauge.builder("eventos.pendentes", this, NotificacaoService::eventosPendentes)
+                .description("Publicacoes de evento cujo consumidor ainda nao concluiu (ADR-004)")
+                .register(metricas);
     }
 
     public List<NotificacaoDTO> listarPorUsuario(Long usuarioId) {

@@ -1,0 +1,61 @@
+// Pipeline do Core (ADR-006). Um pipeline por componente: o job so e
+// disparado quando backend/ muda (includedRegions no ci/jenkins/casc.yaml).
+pipeline {
+    agent any
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+        disableConcurrentBuilds()
+    }
+    environment {
+        IMAGEM = "gamificacao-backend:${env.BUILD_NUMBER}"
+        SMOKE = "smoke-backend-${env.BUILD_NUMBER}"
+    }
+    stages {
+        stage('Regras de arquitetura') {
+            // falha rapido se o Monolito Modular (ADR-001) ou o Hexagonal (ADR-002) forem violados
+            steps {
+                dir('backend') {
+                    sh 'chmod +x mvnw && ./mvnw -B -q test -Dtest=ModularidadeTest,HexagonalConquistaTest -Djacoco.skip=true'
+                }
+            }
+        }
+        stage('Testes e cobertura') {
+            // mvn verify roda toda a suite e o jacoco:check (>= 80% linhas; >= 95% em conquista)
+            steps {
+                dir('backend') {
+                    sh './mvnw -B verify'
+                }
+            }
+            post {
+                always {
+                    junit 'backend/target/surefire-reports/*.xml'
+                }
+            }
+        }
+        stage('Imagem Docker') {
+            steps {
+                sh 'docker build -q -t $IMAGEM backend'
+            }
+        }
+        stage('Smoke test da imagem') {
+            // a imagem precisa subir e expor as metricas usadas como evidencia no Grafana
+            steps {
+                sh '''
+                    docker rm -f $SMOKE >/dev/null 2>&1 || true
+                    docker run -d --name $SMOKE -e SPRING_PROFILES_ACTIVE=h2 $IMAGEM
+                    for i in $(seq 1 90); do
+                        docker exec $SMOKE wget -qO- localhost:8080/actuator/health 2>/dev/null | grep -q UP && break
+                        sleep 2
+                    done
+                    docker exec $SMOKE wget -qO- localhost:8080/actuator/health
+                    docker exec $SMOKE wget -qO- localhost:8080/actuator/prometheus | grep -E "^(gamificacao_conclusoes_total|eventos_pendentes)"
+                '''
+            }
+            post {
+                always {
+                    sh 'docker rm -f $SMOKE >/dev/null 2>&1 || true'
+                }
+            }
+        }
+    }
+}

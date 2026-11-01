@@ -1,0 +1,37 @@
+# Jenkins como codigo (ADR-006): usuario do laboratorio e um job por componente.
+# O repositorio e montado em /repo; cada job so dispara quando o seu diretorio muda.
+jenkins:
+  systemMessage: "B1 Architecture Lab — pipelines por componente"
+  numExecutors: 2
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: lab
+          password: ${JENKINS_SENHA_LAB:-lab}
+  authorizationStrategy: loggedInUsersCanDoAnything
+jobs:
+  - script: |
+      [
+        [nome: 'core',       dir: 'backend'],
+        [nome: 'ia-service', dir: 'ia-service'],
+        [nome: 'iot-gateway', dir: 'iot'],
+      ].each { c ->
+        pipelineJob("gamificacao-${c.nome}") {
+          description("Pipeline do componente ${c.dir}/ (ADR-006)")
+          triggers { scm('H/5 * * * *') }
+          definition {
+            cpsScm {
+              scm {
+                git {
+                  remote { url('file:///repo') }
+                  branch('*/b1-architecture-lab')
+                  extensions { pathRestriction { includedRegions("${c.dir}/.*"); excludedRegions('') } }
+                }
+              }
+              scriptPath("${c.dir}/Jenkinsfile")
+              lightweight(false)
+            }
+          }
+        }
+      }

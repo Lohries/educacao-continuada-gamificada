@@ -23,7 +23,16 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,circuitbreakers
+        include: health,info,circuitbreakers,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      # buckets para calcular p95/p99 no Prometheus (gatilho de extracao do Ranking, ADR-001)
+      percentiles-histogram:
+        http.server.requests: true
+      slo:
+        http.server.requests: 50ms,100ms,300ms,1s
 
 # ia-service (ADR-003): timeout curto + circuit breaker; falha vira fallback
 ia:

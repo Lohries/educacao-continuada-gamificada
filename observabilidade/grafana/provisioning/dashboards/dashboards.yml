@@ -1,0 +1,7 @@
+apiVersion: 1
+providers:
+  - name: b1
+    folder: B1 Architecture Lab
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards

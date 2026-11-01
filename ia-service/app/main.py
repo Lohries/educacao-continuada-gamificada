@@ -5,12 +5,16 @@ compartilhado, para poderem ser separados quando tiverem escala ou custo
 diferentes.
 """
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from .assistente import MODELO_GERADOR, Pergunta, Resposta, responder
 from .recomendacao import MODELO, PedidoRecomendacao, RespostaRecomendacao, recomendar
 
 app = FastAPI(title="ia-service", version="1.0.0",
               description="Recomendacao de cursos e assistente educacional (RAG)")
+
+# Metricas HTTP (latencia, contagem por rota e status) em /metrics (ADR-006)
+Instrumentator().instrument(app).expose(app, include_in_schema=False)
 
 
 @app.get("/health")
