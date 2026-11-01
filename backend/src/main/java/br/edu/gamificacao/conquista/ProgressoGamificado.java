@@ -34,6 +34,21 @@ public class ProgressoGamificado implements Comparable<ProgressoGamificado> {
         this.nivel = 1;
     }
 
+    /**
+     * Reconstroi o progresso a partir do XP persistido, recalculando nivel e
+     * badges pelas mesmas regras de {@link #adicionarXp(int)}.
+     */
+    public static ProgressoGamificado restaurar(String nomeAluno, int xp) {
+        if (xp < 0) {
+            throw new IllegalArgumentException("xp persistido nao pode ser negativo");
+        }
+        ProgressoGamificado progresso = new ProgressoGamificado(nomeAluno);
+        if (xp > 0) {
+            progresso.adicionarXp(xp);
+        }
+        return progresso;
+    }
+
     public String getNomeAluno() {
         return nomeAluno;
     }

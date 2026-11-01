@@ -1,0 +1,37 @@
+# HexagonalConquistaTest executado contra o commit 1e48a6d (Desafio 1, antes do ADR-002)
+14:52:38.945 [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 21.0.12.1
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 2.937 s <<< FAILURE! -- in br.edu.gamificacao.conquista.HexagonalConquistaTest
+[ERROR] br.edu.gamificacao.conquista.HexagonalConquistaTest.casoDeUsoNaoConheceAdapterNemUsuario -- Time elapsed: 0.032 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'no classes that have simple name 'ConquistaService' should depend on classes that reside in any package ['..conquista.adapter..', 'br.edu.gamificacao.usuario..', 'jakarta.persistence..']' was violated (8 times):
+Constructor <br.edu.gamificacao.conquista.ConquistaService.<init>(br.edu.gamificacao.usuario.UsuarioService, br.edu.gamificacao.conquista.internal.BadgeRepository)> has parameter of type <br.edu.gamificacao.usuario.UsuarioService> in (ConquistaService.java:0)
+Field <br.edu.gamificacao.conquista.ConquistaService.usuarioService> has type <br.edu.gamificacao.usuario.UsuarioService> in (ConquistaService.java:0)
+Method <br.edu.gamificacao.conquista.ConquistaService.badgesConquistadas(java.lang.Long)> calls method <br.edu.gamificacao.usuario.Usuario.getXp()> in (ConquistaService.java:38)
+Method <br.edu.gamificacao.conquista.ConquistaService.badgesConquistadas(java.lang.Long)> calls method <br.edu.gamificacao.usuario.UsuarioService.buscarPorId(java.lang.Long)> in (ConquistaService.java:37)
+Method <br.edu.gamificacao.conquista.ConquistaService.concederXp(java.lang.Long, int)> calls method <br.edu.gamificacao.usuario.Usuario.getXp()> in (ConquistaService.java:32)
+Method <br.edu.gamificacao.conquista.ConquistaService.concederXp(java.lang.Long, int)> calls method <br.edu.gamificacao.usuario.UsuarioService.buscarPorId(java.lang.Long)> in (ConquistaService.java:30)
+Method <br.edu.gamificacao.conquista.ConquistaService.concederXp(java.lang.Long, int)> calls method <br.edu.gamificacao.usuario.UsuarioService.registrarProgresso(java.lang.Long, int, int)> in (ConquistaService.java:33)
+Method <br.edu.gamificacao.conquista.ConquistaService.concederXp(java.lang.Long, int)> has return type <br.edu.gamificacao.usuario.Usuario> in (ConquistaService.java:0)
+
+[ERROR] Failures: 
+[ERROR]   HexagonalConquistaTest.casoDeUsoNaoConheceAdapterNemUsuario:37 Architecture Violation [Priority: MEDIUM] - Rule 'no classes that have simple name 'ConquistaService' should depend on classes that reside in any package ['..conquista.adapter..', 'br.edu.gamificacao.usuario..', 'jakarta.persistence..']' was violated (8 times):
+Constructor <br.edu.gamificacao.conquista.ConquistaService.<init>(br.edu.gamificacao.usuario.UsuarioService, br.edu.gamificacao.conquista.internal.BadgeRepository)> has parameter of type <br.edu.gamificacao.usuario.UsuarioService> in (ConquistaService.java:0)
+Field <br.edu.gamificacao.conquista.ConquistaService.usuarioService> has type <br.edu.gamificacao.usuario.UsuarioService> in (ConquistaService.java:0)
+Method <br.edu.gamificacao.conquista.ConquistaService.badgesConquistadas(java.lang.Long)> calls method <br.edu.gamificacao.usuario.Usuario.getXp()> in (ConquistaService.java:38)
+Method <br.edu.gamificacao.conquista.ConquistaService.badgesConquistadas(java.lang.Long)> calls method <br.edu.gamificacao.usuario.UsuarioService.buscarPorId(java.lang.Long)> in (ConquistaService.java:37)
+Method <br.edu.gamificacao.conquista.ConquistaService.concederXp(java.lang.Long, int)> calls method <br.edu.gamificacao.usuario.Usuario.getXp()> in (ConquistaService.java:32)
+Method <br.edu.gamificacao.conquista.ConquistaService.concederXp(java.lang.Long, int)> calls method <br.edu.gamificacao.usuario.UsuarioService.buscarPorId(java.lang.Long)> in (ConquistaService.java:30)
+Method <br.edu.gamificacao.conquista.ConquistaService.concederXp(java.lang.Long, int)> calls method <br.edu.gamificacao.usuario.UsuarioService.registrarProgresso(java.lang.Long, int, int)> in (ConquistaService.java:33)
+Method <br.edu.gamificacao.conquista.ConquistaService.concederXp(java.lang.Long, int)> has return type <br.edu.gamificacao.usuario.Usuario> in (ConquistaService.java:0)
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.2:test (default-test) on project educacao-continuada-gamificada: There are test failures.
+[ERROR] 
+[ERROR] See C:\Users\Luis\AppData\Local\Temp\claude\c--Users-Luis-Downloads-culturar-culturar\e067272d-14c9-4fa4-978c-420b9d444944\scratchpad\d1\backend\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

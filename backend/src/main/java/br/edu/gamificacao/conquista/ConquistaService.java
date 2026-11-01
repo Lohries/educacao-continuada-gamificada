@@ -1,42 +1,40 @@
 package br.edu.gamificacao.conquista;
 
-import br.edu.gamificacao.conquista.internal.Badge;
-import br.edu.gamificacao.conquista.internal.BadgeRepository;
-import br.edu.gamificacao.usuario.Usuario;
-import br.edu.gamificacao.usuario.UsuarioService;
+import br.edu.gamificacao.conquista.porta.ProgressoAlunoPort;
+import br.edu.gamificacao.shared.RecursoNaoEncontradoException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Set;
 
 /**
- * API publica do modulo Conquista: concentra as regras de XP, nivel e
- * badges. A formula de nivel vem da classe de dominio
- * {@link ProgressoGamificado}, garantindo uma unica fonte de verdade.
+ * Caso de uso (porta de entrada) do modulo Conquista. As regras de XP,
+ * nivel e badges ficam no dominio {@link ProgressoGamificado}; a
+ * persistencia fica atras de {@link ProgressoAlunoPort} (ADR-002).
  */
 @Service
 public class ConquistaService {
 
-    private final UsuarioService usuarioService;
-    private final BadgeRepository badgeRepository;
+    private final ProgressoAlunoPort progressos;
 
-    public ConquistaService(UsuarioService usuarioService, BadgeRepository badgeRepository) {
-        this.usuarioService = usuarioService;
-        this.badgeRepository = badgeRepository;
+    public ConquistaService(ProgressoAlunoPort progressos) {
+        this.progressos = progressos;
     }
 
     @Transactional
-    public Usuario concederXp(Long usuarioId, int pontos) {
-        Usuario usuario = usuarioService.buscarPorId(usuarioId);
-
-        int novoXp = usuario.getXp() + pontos;
-        return usuarioService.registrarProgresso(usuarioId, novoXp, ProgressoGamificado.calcularNivel(novoXp));
+    public ProgressoGamificado concederXp(Long alunoId, int pontos) {
+        ProgressoGamificado progresso = buscar(alunoId);
+        progresso.adicionarXp(pontos);
+        progressos.salvar(alunoId, progresso);
+        return progresso;
     }
 
-    public List<String> badgesConquistadas(Long usuarioId) {
-        Usuario usuario = usuarioService.buscarPorId(usuarioId);
-        return badgeRepository.findByXpMinimoLessThanEqualOrderByXpMinimoAsc(usuario.getXp()).stream()
-                .map(Badge::getNome)
-                .toList();
+    public Set<String> badgesConquistadas(Long alunoId) {
+        return buscar(alunoId).getBadges();
+    }
+
+    private ProgressoGamificado buscar(Long alunoId) {
+        return progressos.buscar(alunoId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("usuario nao encontrado: " + alunoId));
     }
 }

@@ -53,6 +53,8 @@ Tudo isso mantendo confiabilidade, testabilidade, observabilidade e evolução c
 | ASR-01 | Manutenibilidade (Supportability) | 1 | Estrutura: fronteiras por capacidade | [ADR-001](../adr/ADR-001-monolito-modular.md) | Dependências antes/depois; `ModularidadeTest` |
 | ASR-02 | Escalabilidade do Ranking (Performance) | 1 | Estrutura/implantação: Ranking isolável para extração futura | [ADR-001](../adr/ADR-001-monolito-modular.md) | Ranking depende só da API de `usuario` |
 | ASR-03 | Complexidade operacional (+ restrição de equipe) | 1 | Operação: um único deploy enquanto não houver evidência de escala | [ADR-001](../adr/ADR-001-monolito-modular.md) | Mesmo `docker compose` da AC1 |
+| ASR-04 | Modificabilidade das regras de gamificação (Supportability) | 2 | Estrutura: dependências apontam para o domínio | [ADR-002](../adr/ADR-002-ports-and-adapters-na-conquista.md) | `HexagonalConquistaTest` (ArchUnit) |
+| ASR-05 | Testabilidade do domínio (Supportability) | 2 | Estrutura: porta substituível por fake | [ADR-002](../adr/ADR-002-ports-and-adapters-na-conquista.md) | Contrato da porta com 2 adapters |
 
 ---
 
@@ -140,3 +142,103 @@ flowchart TB
 - **Diagramas gerados pelo Spring Modulith** (PlantUML C4 Component): [`evidencias/desafio-1/spring-modulith/`](evidencias/desafio-1/spring-modulith/).
 
 **Conclusão:** a modularização resolveu a manutenibilidade e criou a fronteira do Ranking sem nenhum custo operacional novo. A extração do Ranking **não** foi feita porque não há evidência de gargalo. O gatilho é a latência p95 e o throughput de `GET /api/ranking`, medidos no Desafio 6.
+
+---
+
+## Desafio 2 — Organização interna do Core
+
+**Pergunta:** qual dependência realmente precisa ser invertida para que as regras de gamificação mudem sem arrastar banco, framework e integrações?
+
+### RF / RNF
+
+- **RFs:** RF01 Ranking e RF02 Conquistas (regras de XP, nível e badges).
+- **RNFs analisados:** manutenibilidade, testabilidade, modificabilidade e facilidade de evolução (todos de Supportability).
+
+### ASR (máx. 3)
+
+| RNF | ASR? | Por quê |
+|---|---|---|
+| Modificabilidade | **Sim (ASR-04)** | As regras mudam com frequência; precisam ficar num núcleo que não muda quando a persistência muda (**estrutura**: direção das dependências) |
+| Testabilidade | **Sim (ASR-05)** | No D1, testar a regra exigia Spring + banco. Uma porta permite um fake (**estrutura**) |
+| Manutenibilidade | **Sim (ASR-01, continua)** | O padrão fica dentro do módulo `conquista`, sem se espalhar pelo Core |
+| Facilidade de evolução | Não separado | É consequência das três acima |
+
+### RPC
+
+- Spring Boot.
+- Regras existentes reaproveitadas: `ProgressoGamificado` e os 16 testes da AC1 ficaram intactos.
+- Proibido reescrever o produto inteiro.
+
+### Alternativas e trade-offs
+
+| | A — Serviço acoplado (D1) | **B — Ports & Adapters em `conquista`** | C — Clean/Hexagonal em todo o Core |
+|---|---|---|---|
+| Regra isolada da persistência | Não | **Sim** | Sim |
+| Teste sem Spring | Não | **Sim** | Sim |
+| Custo | Zero | **1 porta + 1 adapter** | Reescrever 5 módulos de CRUD sem regra volátil |
+| Respeita "não reescrever tudo" | Sim | **Sim** | Não |
+
+**DDD × Hexagonal × Clean × Onion:** não são concorrentes.
+- O **DDD** dá as fronteiras e o modelo: `conquista` como *bounded context* e `ProgressoGamificado` como modelo de domínio.
+- O **Hexagonal** dá a mecânica de inversão.
+- Clean e Onion descrevem a mesma regra ("dependências apontam para dentro") em camadas concêntricas.
+
+Combinamos DDD tático leve com Hexagonal, **só onde a regra é volátil**.
+
+### Decisão — [ADR-002](../adr/ADR-002-ports-and-adapters-na-conquista.md)
+
+A dependência invertida é **regra de gamificação → persistência**:
+- `ConquistaService` (caso de uso) passa a depender só do domínio e de `ProgressoAlunoPort`.
+- `ProgressoAlunoJpaAdapter` implementa a porta sobre a tabela `usuarios` da AC1.
+- `ProgressoAlunoEmMemoria` implementa a porta nos testes.
+
+### C4 — Component (Core)
+
+```mermaid
+flowchart TB
+    front["Front-end Web<br/>[Container: Vue 3]"]
+    db[("Banco relacional<br/>[PostgreSQL 16]")]
+    subgraph core["Core Gamificação [Container: Spring Boot 3.4]"]
+        direction TB
+        subgraph mconq["Módulo conquista (Hexagonal)"]
+            direction TB
+            caso["ConquistaService<br/>[Component: caso de uso]"]
+            dominio["ProgressoGamificado<br/>[Component: domínio, Java puro]"]
+            porta["ProgressoAlunoPort<br/>[Component: porta de saída]"]
+            adapter["ProgressoAlunoJpaAdapter<br/>[Component: adapter]"]
+            caso --> dominio
+            caso --> porta
+            adapter -. implementa .-> porta
+            adapter --> dominio
+        end
+        musuario["Módulo usuario<br/>[Component: cadastro + JPA]"]
+        mcurso["Módulo curso"]
+        mmatricula["Módulo matricula<br/>[Component: matrícula/conclusão]"]
+        mranking["Módulo ranking<br/>[Component: leitura]"]
+        mmatricula -->|concederXp| caso
+        mmatricula --> musuario
+        mmatricula --> mcurso
+        mranking --> musuario
+        adapter --> musuario
+    end
+    front -->|REST/JSON| core
+    musuario -->|JPA| db
+    mcurso -->|JPA| db
+    mmatricula -->|JPA| db
+```
+
+### Evidência (mini-lab)
+
+**Hipótese:** com a dependência invertida, a regra de domínio continua testada quando o adapter é trocado.
+
+| Evidência | Resultado |
+|---|---|
+| ArchUnit (`HexagonalConquistaTest`) contra o código **do D1** | **Falha**: 8 dependências de `ConquistaService` para `usuario` ([log](evidencias/desafio-2/hexagonal-antes.log)) |
+| ArchUnit contra o código **atual** | Passa: domínio e porta sem Spring/JPA; caso de uso sem adapter |
+| Contrato `ProgressoAlunoPortContrato` × adapter **em memória** | 3/3 em 0,01 s |
+| O **mesmo** contrato × adapter **JPA** (H2) | 3/3 em 15 s (sobe Spring + banco) |
+| `ConquistaServiceTest`: caso de uso só com domínio + fake | 4/4 em 0,15 s, sem Spring |
+| Testes de domínio da AC1 (`ProgressoGamificadoTest`) | 16/16, sem alteração |
+| Suíte completa | **40/40** ([log](evidencias/desafio-2/testes-desafio-2.log)) |
+
+**Conclusão:** só uma dependência precisava ser invertida, a de regra para persistência. O custo foi proporcional: 1 interface e 1 adapter, só em `conquista`. A troca de adapter foi comprovada pelo mesmo contrato passando nas duas implementações, e a regra passou a ser testável sem infraestrutura. A dívida registrada é o catálogo de badges duplicado entre o domínio e a tabela `badges`.
