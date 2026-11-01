@@ -61,6 +61,31 @@ services:
     ports:
       - "8000:8000"
 
+  mosquitto:
+    image: eclipse-mosquitto:2.0.20
+    container_name: gamificacao-mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./iot/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto-data:/mosquitto/data
+
+  iot-gateway:
+    build:
+      context: ./iot
+      dockerfile: gateway/Dockerfile
+    container_name: gamificacao-iot-gateway
+    restart: unless-stopped
+    environment:
+      MQTT_HOST: mosquitto
+      CORE_URL: http://backend:8080
+    ports:
+      - "9101:9101"
+    depends_on:
+      - mosquitto
+      - backend
+
   frontend:
     build:
       context: ./frontend
@@ -78,3 +103,4 @@ services:
 
 volumes:
   pgdata:
+  mosquitto-data:

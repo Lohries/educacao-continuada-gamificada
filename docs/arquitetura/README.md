@@ -61,6 +61,9 @@ Tudo isso mantendo confiabilidade, testabilidade, observabilidade e evolução c
 | ASR-09 | Tolerância a falhas do fluxo de conclusão (Reliability) | 4 | Comunicação: consumidores assíncronos depois do commit | [ADR-004](../adr/ADR-004-eventos-de-conclusao.md) | `EventosConclusaoTest`; mini-lab com o provedor fora |
 | ASR-10 | Recuperabilidade, sem perda de eventos (Reliability) | 4 | Dados/operação: evento persistido na transação (outbox) e reentregue | [ADR-004](../adr/ADR-004-eventos-de-conclusao.md) | Evento pendente → reprocessado em ~12 s |
 | ASR-11 | Desacoplamento produtor/consumidores (Supportability) | 4 | Estrutura: contrato `CursoConcluido`; `matricula` não conhece `notificacao` | [ADR-004](../adr/ADR-004-eventos-de-conclusao.md) | `ModularidadeTest` (sem ciclo) |
+| ASR-12 | Tolerância à conectividade intermitente (Reliability) | 5 | Comunicação/implantação: broker com sessão persistente, QoS 1, fila local, ack após o Core | [ADR-005](../adr/ADR-005-iot-mqtt-gateway.md) | Mini-lab: queda do dispositivo e do gateway sem perda |
+| ASR-13 | Eficiência de comunicação (Performance) | 5 | Comunicação: MQTT com conexão mantida e payload compacto | [ADR-005](../adr/ADR-005-iot-mqtt-gateway.md) | 99 bytes por evento |
+| ASR-14 | Interoperabilidade / Core desacoplado dos dispositivos (Supportability) | 5 | Estrutura: gateway traduz para o contrato do Core | [ADR-005](../adr/ADR-005-iot-mqtt-gateway.md) | `test_tradutor.py`; Core sem dependência de MQTT |
 
 ---
 
@@ -491,3 +494,123 @@ Suíte completa: **48/48** ([log](evidencias/desafio-4/testes-desafio-4.log)).
 | Provedor religado | O reprocessamento automático entregou em **~12 s**; 2 notificações; `pendentes=0` |
 
 **Conclusão:** separar o síncrono (conclusão + XP) do eventual (notificação) atendeu aos três ASRs. O outbox do Spring Modulith dá a garantia de entrega que um broker daria, para consumidores no mesmo processo, sem nenhum componente novo para operar. O broker fica reservado para quando aparecer um consumidor remoto.
+
+---
+
+## Desafio 5 — IoT e MQTT
+
+**Pergunta:** como eventos de dispositivos limitados, com conexão instável, entram na plataforma sem acoplar o Core a cada dispositivo?
+
+### RF / RNF
+
+- **RF:** RF06 Receber eventos IoT (presença, início e conclusão de atividade) e encaminhá-los ao ecossistema.
+- **RNFs analisados:**
+  - interoperabilidade (Supportability);
+  - eficiência de comunicação (Performance);
+  - disponibilidade e tolerância à conectividade intermitente (Reliability);
+  - escalabilidade;
+  - segurança de integração.
+
+### ASR (máx. 3)
+
+| RNF | ASR? | Por quê |
+|---|---|---|
+| Conectividade intermitente | **Sim (ASR-12)** | Dispositivo e consumidor caem sem perder eventos. Exige broker com sessão persistente e QoS 1, e fila local no dispositivo (**comunicação/implantação**) |
+| Eficiência de comunicação | **Sim (ASR-13)** | Pouca CPU e banda: protocolo leve e payload compacto (**comunicação**) |
+| Interoperabilidade | **Sim (ASR-14)** | Dispositivos heterogêneos não chegam direto ao Core: um gateway traduz (**estrutura**) |
+| Escalabilidade | Não | O broker absorve o fan-in; não muda a decisão |
+| Disponibilidade | Não separado | Coberta pelo ASR-12 |
+| Segurança de integração | Não muda a estrutura | Muda a configuração (TLS + ACL); fica como pendência para produção no ADR-005 |
+
+### RPC
+
+- Dispositivos com pouco poder computacional.
+- Conectividade intermitente.
+- Protocolo e broker adicionam componentes operacionais.
+
+### Alternativas e trade-offs
+
+| | A — REST direto ao Core | **B — MQTT + gateway** | C — MQTT + mensageria interna |
+|---|---|---|---|
+| Custo no dispositivo | HTTP/TLS por evento | **Conexão mantida, ~99 B por evento** | Igual a B |
+| Core fora | Evento perdido ou retry no dispositivo | **Broker guarda; gateway só dá ack depois do Core** | Igual a B |
+| Core conhece o dispositivo? | Sim | **Não (gateway traduz)** | Não |
+| Componentes novos | Nenhum | **Broker + gateway** | Broker + gateway + segundo broker |
+| Justificativa para C | — | — | Nenhum ASR: um só consumidor e entrega interna já coberta pelo ADR-004 |
+
+**REST é suficiente?** Não para o dispositivo: não guarda nada no meio e pesa a cada evento.
+
+**O que o MQTT resolve:**
+- QoS 1 e sessão persistente;
+- conexão mantida com keepalive;
+- payload mínimo;
+- tópicos para roteamento e ACL.
+
+**Duplicidade e perda:**
+- **Perda:** QoS 1 em cada salto, fila local no dispositivo, sessão persistente no broker e ack manual no gateway.
+- **Duplicidade:** `eventId` gerado no dispositivo, cache LRU no gateway e unique no Core.
+
+### Decisão — [ADR-005](../adr/ADR-005-iot-mqtt-gateway.md)
+
+- **Broker:** Mosquitto 2.0.20.
+- **Dispositivos:** QoS 1 e *store-and-forward*.
+- **Gateway IoT** (Python): sessão persistente, ack manual depois do Core, tradução e deduplicação.
+- **Core** (`aprendizagem`): `POST /api/eventos-aprendizagem`, idempotente pelo `eventId`.
+- **Nenhum segundo broker.**
+
+### C4 — Container + fluxo do evento
+
+```mermaid
+flowchart LR
+    subgraph lab["Laboratório"]
+        d1["Sensor de presença<br/>[Dispositivo IoT]"]
+        d2["Leitor de atividade<br/>[Dispositivo IoT]"]
+    end
+    broker["Broker MQTT<br/>[Container: Eclipse Mosquitto 2.0.20]<br/>sessões persistentes"]
+    gw["Gateway IoT<br/>[Container: Python 3.12 / paho-mqtt]<br/>traduz, deduplica, ack após o Core"]
+    core["Core Gamificação<br/>[Container: Spring Boot]<br/>módulo aprendizagem (idempotente)"]
+    db[("PostgreSQL")]
+    d1 -->|"MQTT QoS 1<br/>lab/{lab}/dispositivo/{id}/eventos"| broker
+    d2 -->|MQTT QoS 1| broker
+    broker -->|"MQTT QoS 1 (assinatura persistente)"| gw
+    gw -->|"REST/JSON<br/>POST /api/eventos-aprendizagem"| core
+    core -->|JPA| db
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant D as Dispositivo
+    participant B as Mosquitto
+    participant G as Gateway
+    participant C as Core
+    D->>B: PUBLISH QoS1 {id, d, t, a, ts}
+    B-->>D: PUBACK
+    note over D: sem conexão → fila local; reenvia ao reconectar
+    B->>G: PUBLISH (sessão persistente guarda se o gateway estiver fora)
+    G->>G: valida, traduz, checa cache de eventId
+    G->>C: POST /api/eventos-aprendizagem
+    C-->>G: 201 novo / 200 já registrado
+    G-->>B: PUBACK manual (só depois do Core)
+```
+
+### Evidência (mini-lab)
+
+**Hipótese:** com QoS 1, sessão persistente, fila local e ack depois do Core, nenhum evento se perde quando o dispositivo ou o gateway caem, e nenhum é registrado duas vezes.
+
+**Mini-lab real** ([script](evidencias/desafio-5/mini-lab.sh), [log](evidencias/desafio-5/mini-lab.log)): Mosquitto 2.0.20 no Docker, Core (jar), gateway e simulador.
+
+| Cenário | Observado |
+|---|---|
+| Rajada: 2 dispositivos × 4 eventos, **queda do sensor1** no meio e **2 duplicatas** | 8 gerados; 2 saíram da fila local depois da reconexão; 10 publicados e 10 confirmados pelo broker; **2 duplicatas descartadas no gateway**; **8 eventos no Core** |
+| **Gateway parado**; dispositivos publicam 6 eventos | Broker confirmou os 6; o Core continua com 8 |
+| Gateway religado (mesmo `client_id`, sessão persistente) | O broker entregou as 6 mensagens guardadas; **14 eventos únicos no Core** |
+| Tamanho médio da mensagem | **99 bytes** por evento |
+| Métricas do gateway (`:9101/metrics`, processo religado) | `recebidos=6`, `encaminhados=6`, `duplicados=0`, `falhas_core=0` |
+
+**Testes:**
+- `test_tradutor.py`: 10/10 ([log](evidencias/desafio-5/pytest-gateway.log)).
+- `EventoAprendizagemTest`: 3/3; o mesmo `eventId` devolve 201 e depois 200, com um único registro.
+- Suíte Java: **51/51** ([log](evidencias/desafio-5/testes-desafio-5.log)).
+
+**Conclusão:** cada salto guarda o evento até o próximo confirmar: fila local, broker, ack manual e unique no Core. Por isso as quedas do dispositivo e do gateway não perderam nenhum evento, e as duplicatas foram barradas. O MQTT se justificou pela intermitência e pela eficiência, e não há ASR para um segundo broker. Para produção, falta só o endurecimento de segurança (TLS + ACL).

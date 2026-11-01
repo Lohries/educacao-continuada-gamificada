@@ -1,0 +1,44 @@
+
+== 15:40:41 Subindo o broker Mosquitto 2.0.20 (Docker) com iot/mosquitto/mosquitto.conf
+1793558442: mosquitto version 2.0.20 running
+
+== 15:40:44 Subindo o Core (h2) na porta 8081
+alunos cadastrados: 1 2 3
+
+== 15:41:05 Subindo o gateway IoT (sessao persistente, QoS 1, ack manual)
+2026-11-01 15:41:05,774 INFO gateway: conectado ao broker localhost:1883 (Success); assinando lab/+/dispositivo/+/eventos
+
+== 15:41:08 1) Rajada: 2 dispositivos x 4 eventos, queda de conexao do sensor1 no meio e 2 duplicatas
+[queda] lab-redes-sensor1 sem conexao; eventos seguintes vao para a fila local
+[queda] lab-redes-sensor1 reconectado; 2 eventos da fila local publicados
+[duplicado] reenviando 472c44db-2a55-44ce-a78b-ad01e1ef7da9 de lab-redes-sensor2
+[duplicado] reenviando 900c08b6-1884-44dd-a97e-4829fd167ed8 de lab-redes-sensor2
+gerados=8 publicados=10 (com 2 duplicados) confirmados_pelo_broker=10 bytes_medios_por_mensagem=99
+eventos no Core: 8 (esperado: 8 unicos)
+
+== 15:41:16 2) Gateway fora do ar; dispositivos continuam publicando (2 x 3 eventos)
+gerados=6 publicados=6 (com 0 duplicados) confirmados_pelo_broker=6 bytes_medios_por_mensagem=99
+eventos no Core com o gateway fora: 8 (continua 8)
+
+== 15:41:21 3) Gateway volta: o broker entrega as mensagens guardadas na sessao persistente
+eventos no Core: 14 (esperado: 14 unicos)
+
+== 15:41:29 4) Metricas do gateway (Prometheus)
+iot_eventos_recebidos_total 6.0
+iot_eventos_encaminhados_total 6.0
+iot_eventos_duplicados_total 0.0
+iot_eventos_invalidos_total 0.0
+iot_falhas_core_total 0.0
+
+== 15:41:29 5) Trechos do log do gateway
+2026-11-01 15:41:05,774 INFO gateway: conectado ao broker localhost:1883 (Success); assinando lab/+/dispositivo/+/eventos
+2026-11-01 15:41:10,319 INFO gateway: duplicado descartado no gateway: 472c44db-2a55-44ce-a78b-ad01e1ef7da9
+2026-11-01 15:41:10,344 INFO gateway: duplicado descartado no gateway: 900c08b6-1884-44dd-a97e-4829fd167ed8
+2026-11-01 15:41:21,947 INFO gateway: conectado ao broker localhost:1883 (Success); assinando lab/+/dispositivo/+/eventos
+encaminhados ao Core: 14
+
+== 15:41:29 6) Exemplo de evento registrado no Core
+[{"eventId":"472c44db-2a55-44ce-a78b-ad01e1ef7da9","dispositivoId":"lab-redes-sensor2","laboratorio":"lab-redes","tipo":"PRESENCA","alunoId":1,"ocorridoEm":"2026-11-01T18:41:09Z"},
+{"eventId":"bc084130-05f2-4152-a2bc-e410a35057ec","dispositivoId":"lab-redes-sensor1","laboratorio":"lab-redes","tipo":"INICIO_ATIVIDADE","alunoId":1,"ocorridoEm":"2026-11-01T18:41:09Z"},
+
+== 15:41:31 Fim do mini-lab

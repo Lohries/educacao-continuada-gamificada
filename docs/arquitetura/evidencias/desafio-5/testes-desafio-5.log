@@ -1,0 +1,14 @@
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 39.76 s -- in br.edu.gamificacao.aprendizagem.EventoAprendizagemTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s -- in br.edu.gamificacao.conquista.ConquistaServiceTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.246 s -- in br.edu.gamificacao.conquista.HexagonalConquistaTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s -- in br.edu.gamificacao.conquista.ProgressoAlunoEmMemoriaContratoTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.844 s -- in br.edu.gamificacao.conquista.ProgressoAlunoJpaAdapterContratoTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in br.edu.gamificacao.conquista.ProgressoGamificadoRestauracaoTest
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.051 s -- in br.edu.gamificacao.conquista.ProgressoGamificadoTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.097 s -- in br.edu.gamificacao.EducacaoContinuadaGamificadaApplicationTests
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.65 s -- in br.edu.gamificacao.ModularidadeTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.710 s -- in br.edu.gamificacao.notificacao.EventosConclusaoTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.363 s -- in br.edu.gamificacao.recomendacao.RecomendacaoDegradadaTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 14.12 s -- in br.edu.gamificacao.bdd.RunCucumberTest
+[INFO] Tests run: 51, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
