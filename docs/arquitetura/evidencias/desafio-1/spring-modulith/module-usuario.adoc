@@ -1,0 +1,11 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`br.edu.gamificacao.usuario`
+|Spring components
+|_Services_
+
+* `b.e.g.u.UsuarioService` -- API publica do modulo Usuario: cadastro e consulta de alunos. As regras de XP, nivel e badges pertencem ao modulo Conquista, que apenas registra aqui o progresso ja calculado.
+|Aggregate roots
+|* `b.e.g.u.Usuario`
+|===

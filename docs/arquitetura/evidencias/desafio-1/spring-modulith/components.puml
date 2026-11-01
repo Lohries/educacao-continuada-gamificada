@@ -1,0 +1,30 @@
+@startuml
+set separator none
+title EducacaoContinuadaGamificadaApplication
+
+top to bottom direction
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Component>
+
+Container_Boundary("EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication_boundary", "EducacaoContinuadaGamificadaApplication", $tags="") {
+  Component(EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Conquista, "Conquista", $techn="Module", $descr="", $tags="", $link="")
+  Component(EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Curso, "Curso", $techn="Module", $descr="", $tags="", $link="")
+  Component(EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Matricula, "Matricula", $techn="Module", $descr="", $tags="", $link="")
+  Component(EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Ranking, "Ranking", $techn="Module", $descr="", $tags="", $link="")
+  Component(EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Shared, "Shared", $techn="Module", $descr="", $tags="", $link="")
+  Component(EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Usuario, "Usuario", $techn="Module", $descr="", $tags="", $link="")
+}
+
+Rel(EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Ranking, EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Usuario, "uses", $techn="", $tags="", $link="")
+Rel(EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Conquista, EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Usuario, "uses", $techn="", $tags="", $link="")
+Rel(EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Matricula, EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Shared, "depends on", $techn="", $tags="", $link="")
+Rel(EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Matricula, EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Usuario, "uses", $techn="", $tags="", $link="")
+Rel(EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Matricula, EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Curso, "uses", $techn="", $tags="", $link="")
+Rel(EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Matricula, EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Conquista, "uses", $techn="", $tags="", $link="")
+Rel(EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Usuario, EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Shared, "depends on", $techn="", $tags="", $link="")
+Rel(EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Curso, EducacaoContinuadaGamificadaApplication.EducacaoContinuadaGamificadaApplication.Shared, "depends on", $techn="", $tags="", $link="")
+
+SHOW_LEGEND(true)
+@enduml

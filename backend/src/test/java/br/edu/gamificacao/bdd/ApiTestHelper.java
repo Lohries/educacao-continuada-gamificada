@@ -1,14 +1,14 @@
 package br.edu.gamificacao.bdd;
 
-import br.edu.gamificacao.dto.CursoCreateDTO;
-import br.edu.gamificacao.dto.CursoDTO;
-import br.edu.gamificacao.dto.MatriculaCreateDTO;
-import br.edu.gamificacao.dto.RankingItemDTO;
-import br.edu.gamificacao.dto.UsuarioCreateDTO;
-import br.edu.gamificacao.dto.UsuarioDTO;
-import br.edu.gamificacao.entity.Curso;
-import br.edu.gamificacao.service.CursoService;
-import br.edu.gamificacao.service.UsuarioService;
+import br.edu.gamificacao.curso.CursoCreateDTO;
+import br.edu.gamificacao.curso.CursoDTO;
+import br.edu.gamificacao.matricula.MatriculaCreateDTO;
+import br.edu.gamificacao.ranking.RankingItemDTO;
+import br.edu.gamificacao.usuario.UsuarioCreateDTO;
+import br.edu.gamificacao.usuario.UsuarioDTO;
+import br.edu.gamificacao.curso.Curso;
+import br.edu.gamificacao.conquista.ConquistaService;
+import br.edu.gamificacao.curso.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ public class ApiTestHelper {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private UsuarioService usuarioService;
+    private ConquistaService conquistaService;
 
     @Autowired
     private CursoService cursoService;
@@ -53,7 +53,7 @@ public class ApiTestHelper {
 
         Long usuarioId = resposta.getBody().id();
         if (xpInicial > 0) {
-            usuarioService.adicionarXp(usuarioId, xpInicial);
+            conquistaService.concederXp(usuarioId, xpInicial);
         }
 
         return usuarioId;

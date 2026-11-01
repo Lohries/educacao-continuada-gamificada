@@ -1,0 +1,6 @@
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.154 s -- in br.edu.gamificacao.conquista.ProgressoGamificadoTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 22.51 s -- in br.edu.gamificacao.EducacaoContinuadaGamificadaApplicationTests
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.240 s -- in br.edu.gamificacao.ModularidadeTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.292 s -- in br.edu.gamificacao.bdd.RunCucumberTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS

@@ -1,0 +1,11 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`br.edu.gamificacao.curso`
+|Spring components
+|_Services_
+
+* `b.e.g.c.CursoService`
+|Aggregate roots
+|* `b.e.g.c.Curso`
+|===

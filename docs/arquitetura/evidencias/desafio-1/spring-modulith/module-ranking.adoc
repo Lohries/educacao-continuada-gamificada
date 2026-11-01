@@ -1,0 +1,11 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`br.edu.gamificacao.ranking`
+|Spring components
+|_Services_
+
+* `b.e.g.r.RankingService` -- API publica do modulo Ranking. E uma leitura: depende apenas da API do modulo Usuario, o que mantem a fronteira pronta para uma extracao futura caso as metricas mostrem necessidade de escala propria (ADR-001).
+|Bean references
+|* `b.e.g.u.UsuarioService` (in Usuario) -- API publica do modulo Usuario: cadastro e consulta de alunos. As regras de XP, nivel e badges pertencem ao modulo Conquista, que apenas registra aqui o progresso ja calculado.
+|===

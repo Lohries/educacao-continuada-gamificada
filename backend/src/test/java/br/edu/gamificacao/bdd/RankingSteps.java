@@ -1,6 +1,6 @@
 package br.edu.gamificacao.bdd;
 
-import br.edu.gamificacao.dto.RankingItemDTO;
+import br.edu.gamificacao.ranking.RankingItemDTO;
 import io.cucumber.java.pt.Entao;
 import io.cucumber.java.pt.Quando;
 import org.springframework.beans.factory.annotation.Autowired;

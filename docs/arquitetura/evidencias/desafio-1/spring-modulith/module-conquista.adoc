@@ -1,0 +1,11 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`br.edu.gamificacao.conquista`
+|Spring components
+|_Services_
+
+* `b.e.g.c.ConquistaService` -- API publica do modulo Conquista: concentra as regras de XP, nivel e badges. A formula de nivel vem da classe de dominio `b.e.g.c.ProgressoGamificado`, garantindo uma unica fonte de verdade.
+|Bean references
+|* `b.e.g.u.UsuarioService` (in Usuario) -- API publica do modulo Usuario: cadastro e consulta de alunos. As regras de XP, nivel e badges pertencem ao modulo Conquista, que apenas registra aqui o progresso ja calculado.
+|===

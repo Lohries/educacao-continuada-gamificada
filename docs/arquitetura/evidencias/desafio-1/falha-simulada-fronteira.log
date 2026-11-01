@@ -1,0 +1,18 @@
+12:41:32.167 [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 21.0.12.1
+[ERROR] Tests run: 2, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 11.43 s <<< FAILURE! -- in br.edu.gamificacao.ModularidadeTest
+[ERROR] br.edu.gamificacao.ModularidadeTest.modulosRespeitamAsFronteiras -- Time elapsed: 0.795 s <<< ERROR!
+org.springframework.modulith.core.Violations: 
+- Module 'ranking' depends on non-exposed type br.edu.gamificacao.usuario.internal.UsuarioRepository within module 'usuario'!
+Field <br.edu.gamificacao.ranking.RankingService.atalhoProibido> has type <br.edu.gamificacao.usuario.internal.UsuarioRepository> in (RankingService.java:0)
+	at org.springframework.modulith.core.Violations.and(Violations.java:141)
+	at org.springframework.modulith.core.ApplicationModules.detectViolations(ApplicationModules.java:485)
+	at org.springframework.modulith.core.ApplicationModules.verify(ApplicationModules.java:452)
+	at br.edu.gamificacao.ModularidadeTest.modulosRespeitamAsFronteiras(ModularidadeTest.java:17)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] Errors: 
+[ERROR]   ModularidadeTest.modulosRespeitamAsFronteiras:17 » Violations - Module 'ranking' depends on non-exposed type br.edu.gamificacao.usuario.internal.UsuarioRepository within module 'usuario'!
+Field <br.edu.gamificacao.ranking.RankingService.atalhoProibido> has type <br.edu.gamificacao.usuario.internal.UsuarioRepository> in (RankingService.java:0)
+[ERROR] Tests run: 2, Failures: 0, Errors: 1, Skipped: 0

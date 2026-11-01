@@ -1,6 +1,6 @@
 package br.edu.gamificacao.bdd;
 
-import br.edu.gamificacao.dto.UsuarioDTO;
+import br.edu.gamificacao.usuario.UsuarioDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.pt.Dado;

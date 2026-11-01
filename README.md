@@ -55,13 +55,13 @@ Os step definitions ficam em
 
 ## TDD — RED → GREEN → BLUE
 
-Seguindo o mesmo formato do exercício da calculadora, foi criado o pacote
-`domain` com uma classe de domínio pura (sem anotações de framework) e o
+Seguindo o mesmo formato do exercício da calculadora, foi criada uma classe
+de domínio pura (hoje no módulo `conquista`) (sem anotações de framework) e o
 pacote de teste correspondente:
 
-- Classe de domínio: [`ProgressoGamificado`](backend/src/main/java/br/edu/gamificacao/domain/ProgressoGamificado.java)
+- Classe de domínio: [`ProgressoGamificado`](backend/src/main/java/br/edu/gamificacao/conquista/ProgressoGamificado.java)
   (XP, nível, badges e comparação para ranking)
-- Testes: [`ProgressoGamificadoTest`](backend/src/test/java/br/edu/gamificacao/domain/ProgressoGamificadoTest.java)
+- Testes: [`ProgressoGamificadoTest`](backend/src/test/java/br/edu/gamificacao/conquista/ProgressoGamificadoTest.java)
   (16 casos de teste, identificados por autor no cabeçalho de cada bloco)
 
 ### RED
@@ -107,19 +107,25 @@ Rodando `mvn test` sem filtro (domínio + smoke test do Spring Boot +
 Cucumber): **23/23 testes passando**.
 Evidência: [`docs/evidencias/tdd/04-suite-completa-mvn-test.txt`](docs/evidencias/tdd/04-suite-completa-mvn-test.txt)
 
-## Arquitetura / camadas
+## Arquitetura / módulos
+
+Na AC1 o Core era organizado por camadas técnicas. No B1 ele passou a ser um
+**Monólito Modular** ([ADR-001](docs/adr/ADR-001-monolito-modular.md)), e o
+registro completo das decisões está em
+[`docs/arquitetura/README.md`](docs/arquitetura/README.md).
 
 ```
 backend/src/main/java/br/edu/gamificacao/
-├── domain/       ProgressoGamificado (regra de XP/nivel/badges, TDD)
-├── entity/       Usuario, Curso, Matricula, Badge (JPA)
-├── repository/   UsuarioRepository, CursoRepository, MatriculaRepository, BadgeRepository
-├── service/      UsuarioService, CursoService, MatriculaService (+ exceptions)
-├── dto/          *DTO (records) de entrada e saída da API
-├── controller/   UsuarioController, CursoController, MatriculaController (+ exception handler)
-├── config/       OpenApiConfig (Swagger), CorsConfig
-└── seed/         DataSeeder (dados de demonstração)
+├── usuario/      cadastro de alunos (API pública + internal/ + web/)
+├── curso/        catálogo de cursos
+├── matricula/    matrícula e conclusão de cursos
+├── conquista/    XP, nível e badges (ProgressoGamificado, TDD)
+├── ranking/      ranking por XP (candidato a extração futura)
+└── shared/       exceções, tratamento de erros, Swagger e CORS
 ```
+
+As fronteiras são verificadas pelo Spring Modulith em
+[`ModularidadeTest`](backend/src/test/java/br/edu/gamificacao/ModularidadeTest.java).
 
 ## Dependências (Spring Boot)
 
