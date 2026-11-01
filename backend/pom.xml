@@ -19,6 +19,7 @@
 		<springdoc.version>2.8.6</springdoc.version>
 		<cucumber.version>7.20.1</cucumber.version>
 		<spring-modulith.version>1.3.1</spring-modulith.version>
+		<resilience4j.version>2.2.0</resilience4j.version>
 	</properties>
 
 	<dependencyManagement>
@@ -55,6 +56,17 @@
 		<dependency>
 			<groupId>org.springframework.modulith</groupId>
 			<artifactId>spring-modulith-starter-core</artifactId>
+		</dependency>
+
+		<!-- Chamada ao ia-service com circuit breaker e fallback (ADR-003) -->
+		<dependency>
+			<groupId>io.github.resilience4j</groupId>
+			<artifactId>resilience4j-spring-boot3</artifactId>
+			<version>${resilience4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
 
 		<dependency>

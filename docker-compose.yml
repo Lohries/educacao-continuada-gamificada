@@ -43,11 +43,23 @@ services:
       DB_NAME: gamificacao
       DB_USER: gamificacao
       DB_PASSWORD: gamificacao
+      IA_URL: http://ia-service:8000
     ports:
       - "8080:8080"
     depends_on:
       postgres:
         condition: service_healthy
+      # service_started, nao service_healthy: o Core sobe e opera mesmo com a IA fora (ADR-003)
+      ia-service:
+        condition: service_started
+
+  ia-service:
+    build:
+      context: ./ia-service
+    container_name: gamificacao-ia-service
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
 
   frontend:
     build:

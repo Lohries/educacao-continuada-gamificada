@@ -1,0 +1,27 @@
+[
+  {
+    "id": "faq-xp",
+    "titulo": "Como ganhar XP",
+    "texto": "Voce ganha XP ao concluir um curso em que esta matriculado. Cada curso informa quantos pontos de XP vale ao ser concluido."
+  },
+  {
+    "id": "faq-nivel",
+    "titulo": "Niveis",
+    "texto": "Todo aluno comeca no nivel 1. A cada 100 XP acumulados o aluno sobe um nivel: com 250 XP, por exemplo, ele esta no nivel 3."
+  },
+  {
+    "id": "faq-badges",
+    "titulo": "Badges e conquistas",
+    "texto": "As badges sao desbloqueadas por XP acumulado: Iniciante com 100 XP, Intermediario com 500 XP e Avancado com 1000 XP."
+  },
+  {
+    "id": "faq-ranking",
+    "titulo": "Ranking",
+    "texto": "O ranking ordena os alunos do maior para o menor XP. Concluir mais cursos faz voce subir posicoes no ranking."
+  },
+  {
+    "id": "faq-matricula",
+    "titulo": "Matricula em cursos",
+    "texto": "Para comecar uma trilha, matricule-se em um curso disponivel no catalogo. Nao e possivel se matricular duas vezes no mesmo curso."
+  }
+]

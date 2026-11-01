@@ -55,6 +55,9 @@ Tudo isso mantendo confiabilidade, testabilidade, observabilidade e evolução c
 | ASR-03 | Complexidade operacional (+ restrição de equipe) | 1 | Operação: um único deploy enquanto não houver evidência de escala | [ADR-001](../adr/ADR-001-monolito-modular.md) | Mesmo `docker compose` da AC1 |
 | ASR-04 | Modificabilidade das regras de gamificação (Supportability) | 2 | Estrutura: dependências apontam para o domínio | [ADR-002](../adr/ADR-002-ports-and-adapters-na-conquista.md) | `HexagonalConquistaTest` (ArchUnit) |
 | ASR-05 | Testabilidade do domínio (Supportability) | 2 | Estrutura: porta substituível por fake | [ADR-002](../adr/ADR-002-ports-and-adapters-na-conquista.md) | Contrato da porta com 2 adapters |
+| ASR-06 | Tolerância a falhas da IA (Reliability) | 3 | Comunicação/operação: fronteira de processo, timeout, circuit breaker, fallback | [ADR-003](../adr/ADR-003-servico-python-de-ia.md) | `RecomendacaoDegradadaTest`; mini-lab com kill do Python |
+| ASR-07 | Deploy independente da IA (Supportability) | 3 | Implantação: artefato e container próprios | [ADR-003](../adr/ADR-003-servico-python-de-ia.md) | `ia-service/Dockerfile`; serviço no `docker compose` |
+| ASR-08 | Escalabilidade elástica da IA (Performance) | 3 | Implantação: réplicas da IA sem escalar o Core | [ADR-003](../adr/ADR-003-servico-python-de-ia.md) | Serviço sem estado (sem banco, sem sessão) |
 
 ---
 
@@ -242,3 +245,108 @@ flowchart TB
 | Suíte completa | **40/40** ([log](evidencias/desafio-2/testes-desafio-2.log)) |
 
 **Conclusão:** só uma dependência precisava ser invertida, a de regra para persistência. O custo foi proporcional: 1 interface e 1 adapter, só em `conquista`. A troca de adapter foi comprovada pelo mesmo contrato passando nas duas implementações, e a regra passou a ser testável sem infraestrutura. A dívida registrada é o catálogo de badges duplicado entre o domínio e a tabela `badges`.
+
+---
+
+## Desafio 3 — Serviço Python e IA
+
+**Pergunta:** onde fica a fronteira de ML e RAG/LLM, e qual comportamento degradado é aceitável quando a IA cai?
+
+### RF / RNF
+
+- **RFs:** RF03 Recomendação inteligente e RF04 Assistente educacional.
+- **RNFs analisados:**
+  - deploy independente (Supportability);
+  - escalabilidade e desempenho (Performance);
+  - tolerância a falhas (Reliability);
+  - interoperabilidade e manutenibilidade (Supportability).
+
+### ASR (máx. 3)
+
+| RNF | ASR? | Por quê |
+|---|---|---|
+| Tolerância a falhas | **Sim (ASR-06)** | A IA pode cair e não pode bloquear o Core. Exige fronteira de processo, timeout, circuit breaker e fallback (**comunicação/operação**) |
+| Deploy independente | **Sim (ASR-07)** | Os modelos mudam em ciclo próprio, então precisam de artefato e pipeline separados (**implantação**) |
+| Escalabilidade | **Sim (ASR-08)** | A carga do assistente varia mais que a do Core. A IA escala réplicas sozinha (**implantação**) |
+| Interoperabilidade | Não | REST/JSON resolve sem exigir nada especial |
+| Desempenho | Não, por ora | O timeout de 1,5 s limita o impacto; vai ser medido no Desafio 6 |
+| Manutenibilidade | Não | É consequência da separação |
+
+### RPC
+
+- O Core continua em Java/Spring Boot.
+- ML e RAG são feitos em Python.
+- A indisponibilidade da IA não pode bloquear o fluxo essencial.
+
+### Alternativas e trade-offs
+
+| | A — IA embutida no Core | B — Módulo acoplado | **C — Serviço Python independente** |
+|---|---|---|---|
+| RPC do Python | Viola | Cumpre | **Cumpre** |
+| Falha da IA derruba o Core? | Sim | Sim (mesmo container) | **Não (fallback)** |
+| Deploy e escala próprios | Não | Não | **Sim** |
+| Custo | Baixo | Médio | **Rede, contrato e +1 container/pipeline** |
+
+**ML e RAG:** ficam no mesmo serviço, por enquanto, em rotas independentes e sem estado compartilhado. Mesma linguagem, mesma equipe e mesma política de degradação. **Gatilho de separação:** o RAG adotar um LLM externo, com custo por chamada, latência de segundos ou GPU.
+
+**Python sozinho justifica um serviço?** Não. O que justifica são os ASRs 06, 07 e 08. O Python é a RPC que descarta a alternativa A.
+
+### Decisão — [ADR-003](../adr/ADR-003-servico-python-de-ia.md)
+
+- **`ia-service`** (Python 3.12, FastAPI), sem estado e sem acesso ao banco do Core.
+- No Core, o módulo `recomendacao` chama o serviço por REST/JSON com:
+  - timeout de 1,5 s;
+  - circuit breaker do Resilience4j (abre com 50% de falha em 3+ chamadas e tenta de novo em 15 s);
+  - fallback local.
+
+**Comportamento degradado:**
+- A recomendação usa a regra local (menor XP primeiro) e marca `origem=fallback, degradado=true`.
+- O assistente responde que está indisponível, sem inventar.
+
+### C4 — Container (fronteira da IA)
+
+```mermaid
+flowchart TB
+    aluno["👤 Aluno"]
+    front["Front-end Web<br/>[Container: Vue 3]"]
+    core["Core Gamificação<br/>[Container: Spring Boot 3.4 — Monólito Modular]<br/>módulo recomendacao: timeout + circuit breaker + fallback"]
+    ia["ia-service<br/>[Container: Python 3.12 / FastAPI]<br/>/recomendacoes (ML) · /assistente/perguntas (RAG)"]
+    kb[("Base de conhecimento<br/>[arquivo JSON no ia-service]")]
+    db[("Banco relacional<br/>[PostgreSQL 16]")]
+    aluno -->|HTTPS| front
+    front -->|REST/JSON| core
+    core -->|"REST/JSON síncrono, timeout 1,5 s<br/>(falha → fallback)"| ia
+    ia --> kb
+    core -->|JPA/JDBC| db
+```
+
+O ia-service **não** acessa o banco: o Core envia o histórico e o catálogo em cada pedido.
+
+### Evidência (mini-lab)
+
+**Hipótese:** com a fronteira de processo e as proteções no cliente, uma falha da IA vira degradação, não erro, e não afeta o fluxo essencial.
+
+**Testes automatizados** (stub HTTP no lugar do ia-service, [`RecomendacaoDegradadaTest`](../../backend/src/test/java/br/edu/gamificacao/recomendacao/RecomendacaoDegradadaTest.java)):
+
+| Cenário | Resultado |
+|---|---|
+| IA no ar | `origem=ia`, modelo do serviço |
+| IA responde 503 | `origem=fallback`, 3 cursos pela regra local, nenhuma exceção |
+| IA lenta (1,5 s, timeout de 300 ms no teste) | Fallback em menos de 1,5 s |
+| 6 chamadas com a IA falhando | Circuito **OPEN** depois de 3; as 3 seguintes **não chegam** ao serviço |
+| Matrícula + conclusão com a IA fora | XP concedido normalmente |
+
+Suíte completa: **45/45** no Java ([log](evidencias/desafio-3/testes-desafio-3.log)) e **8/8** no pytest do ia-service.
+
+**Mini-lab real** ([script](evidencias/desafio-3/mini-lab.sh), [log](evidencias/desafio-3/mini-lab.log)): Core em Spring Boot (jar) consumindo o FastAPI (uvicorn).
+
+| Passo | Observado |
+|---|---|
+| IA no ar | Recomendação e assistente com `origem=ia` (HTTP 200, 87 ms e 32 ms) |
+| `kill` do processo Python | `localhost:8000` recusa conexão |
+| Três recomendações + uma pergunta | Todas HTTP 200 com `origem=fallback`, em 9 a 53 ms |
+| `/actuator/circuitbreakers` | `state: OPEN`, 2 falhas e 2 chamadas não permitidas |
+| Matrícula e conclusão com a IA fora | HTTP 200; o aluno chegou a 250 XP, nível 3 |
+| Python religado + 16 s | Recomendação volta a `origem=ia`, circuito `CLOSED` |
+
+**Conclusão:** a fronteira de processo mais timeout, circuit breaker e fallback fez a queda da IA virar degradação controlada. Com o circuito aberto, o Core nem tenta chamar o serviço, então não acumula espera. A recuperação é automática. O custo aceito é a latência de rede e o catálogo enviado a cada pedido. Com catálogos grandes, o ia-service vai precisar de um índice próprio, alimentado por eventos.

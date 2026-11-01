@@ -1,0 +1,55 @@
+
+== 14:59:15 Subindo o ia-service (FastAPI) na porta 8000
+{"status":"UP","modeloRecomendacao":"conteudo-jaccard-v1","geradorAssistente":"extrativo-v1"}
+   -> HTTP 200 em 0.210654s
+
+== 14:59:17 Subindo o Core (Spring Boot, perfil h2) na porta 8081 com IA_URL=http://localhost:8000
+{"status":"UP"}
+   -> HTTP 200 em 0.010292s
+
+== 14:59:29 Cadastrando aluno e concluindo o curso 1 (para a IA ter historico)
+{"id":1,"usuarioId":1,"nomeUsuario":"Aluna Mini-lab","cursoId":1,"tituloCurso":"Fundamentos de Spring Boot","dataMatricula":"2026-11-01T14:59:30.37041","concluida":true,"dataConclusao":"2026-11-01T14:59:30.4882637"}
+   -> HTTP 200 em 0.046341s
+
+== 14:59:30 1) IA no ar: recomendacao e assistente vem do ia-service (origem=ia)
+{"origem":"ia","degradado":false,"modelo":"conteudo-jaccard-v1","itens":[{"cursoId":2,"titulo":"TDD na Pratica","pontuacao":0.0,"motivo":"amplia sua trilha com um tema novo"},{"cursoId":3,"titulo":"BDD e ATDD com Cucumber","pontuacao":0.0,"motivo":"amplia sua trilha com um tema novo"}]}
+   -> HTTP 200 em 0.087169s
+{"origem":"ia","degradado":false,"resposta":"As badges sao desbloqueadas por XP acumulado: Iniciante com 100 XP, Intermediario com 500 XP e Avancado com 1000 XP. Voce ganha XP ao concluir um curso em que esta matriculado. Cada curso informa quantos pontos de XP vale ao ser concluido.","fontes":["Badges e conquistas","Como ganhar XP"]}
+   -> HTTP 200 em 0.031986s
+
+== 14:59:30 2) Interrompendo o ia-service (kill do processo Python)
+   ia-service nao responde (conexao recusada)
+
+== 14:59:34 3) IA fora: o Core responde com fallback (origem=fallback, degradado=true), sem erro 5xx
+{"origem":"fallback","degradado":true,"modelo":"regra-local-menor-xp","itens":[{"cursoId":2,"titulo":"TDD na Pratica","pontuacao":0.0,"motivo":"recomendacao padrao (IA indisponivel)"},{"cursoId":3,"titulo":"BDD e ATDD com Cucumber","pontuacao":0.0,"motivo":"recomendacao padrao (IA indisponivel)"}]}
+   -> HTTP 200 em 0.053267s
+{"origem":"fallback","degradado":true,"modelo":"regra-local-menor-xp","itens":[{"cursoId":2,"titulo":"TDD na Pratica","pontuacao":0.0,"motivo":"recomendacao padrao (IA indisponivel)"},{"cursoId":3,"titulo":"BDD e ATDD com Cucumber","pontuacao":0.0,"motivo":"recomendacao padrao (IA indisponivel)"}]}
+   -> HTTP 200 em 0.012582s
+{"origem":"fallback","degradado":true,"modelo":"regra-local-menor-xp","itens":[{"cursoId":2,"titulo":"TDD na Pratica","pontuacao":0.0,"motivo":"recomendacao padrao (IA indisponivel)"},{"cursoId":3,"titulo":"BDD e ATDD com Cucumber","pontuacao":0.0,"motivo":"recomendacao padrao (IA indisponivel)"}]}
+   -> HTTP 200 em 0.008978s
+{"origem":"fallback","degradado":true,"resposta":"O assistente esta temporariamente indisponivel. Matriculas, conclusoes e ranking continuam funcionando normalmente.","fontes":[]}
+   -> HTTP 200 em 0.009828s
+
+== 14:59:34 4) Estado do circuit breaker depois das falhas
+{"circuitBreakers":{"ia-service":{"failureRate":"50.0%","slowCallRate":"0.0%","failureRateThreshold":"50.0%","slowCallRateThreshold":"100.0%","bufferedCalls":4,"failedCalls":2,"slowCalls":0,"slowFailedCalls":0,"notPermittedCalls":2,"state":"OPEN"}}}
+   -> HTTP 200 em 0.027918s
+
+== 14:59:35 5) Fluxo essencial com a IA fora: matricula e conclusao continuam funcionando
+{"id":2,"usuarioId":1,"nomeUsuario":"Aluna Mini-lab","cursoId":2,"tituloCurso":"TDD na Pratica","dataMatricula":"2026-11-01T14:59:35.173734","concluida":true,"dataConclusao":"2026-11-01T14:59:35.2393519"}
+   -> HTTP 200 em 0.012471s
+{"id":1,"nome":"Aluna Mini-lab","email":"minilab@teste.com","xp":250,"nivel":3,"criadoEm":"2026-11-01T14:59:30.236308"}
+   -> HTTP 200 em 0.004994s
+
+== 14:59:35 6) Religando o ia-service e esperando o circuito sair de OPEN (wait-duration 15 s)
+{"origem":"ia","degradado":false,"modelo":"conteudo-jaccard-v1","itens":[{"cursoId":3,"titulo":"BDD e ATDD com Cucumber","pontuacao":0.0,"motivo":"amplia sua trilha com um tema novo"}]}
+   -> HTTP 200 em 0.019158s
+{"circuitBreakers":{"ia-service":{"failureRate":"-1.0%","slowCallRate":"-1.0%","failureRateThreshold":"50.0%","slowCallRateThreshold":"100.0%","bufferedCalls":0,"failedCalls":0,"slowCalls":0,"slowFailedCalls":0,"notPermittedCalls":0,"state":"CLOSED"}}}
+   -> HTTP 200 em 0.003685s
+
+== 14:59:52 Logs do Core sobre a falha (WARN)
+2026-11-01T14:59:34.706-03:00  WARN 23972 --- [EducacaoContinuadaGamificada] [nio-8081-exec-4] b.e.g.recomendacao.RecomendacaoService   : ia-service indisponivel para recomendacao, usando fallback: org.springframework.we...
+2026-11-01T14:59:34.807-03:00  WARN 23972 --- [EducacaoContinuadaGamificada] [nio-8081-exec-7] b.e.g.recomendacao.RecomendacaoService   : ia-service indisponivel para recomendacao, usando fallback: org.springframework.we...
+2026-11-01T14:59:34.879-03:00  WARN 23972 --- [EducacaoContinuadaGamificada] [nio-8081-exec-9] b.e.g.recomendacao.RecomendacaoService   : ia-service indisponivel para recomendacao, usando fallback: io.github.resilience4j...
+2026-11-01T14:59:34.946-03:00  WARN 23972 --- [EducacaoContinuadaGamificada] [io-8081-exec-10] b.e.g.recomendacao.RecomendacaoService   : ia-service indisponivel para o assistente: io.github.resilience4j.circuitbreaker.C...
+
+== 14:59:54 Fim do mini-lab
