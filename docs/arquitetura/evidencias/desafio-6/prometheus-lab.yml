@@ -1,0 +1,15 @@
+# Variante do observabilidade/prometheus/prometheus.yml para o mini-lab:
+# Core e ia-service rodam no host (fora do Docker), entao o alvo e host.docker.internal.
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+rule_files:
+  - /etc/prometheus/alertas.yml
+scrape_configs:
+  - job_name: core
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["host.docker.internal:8081"]
+  - job_name: ia-service
+    static_configs:
+      - targets: ["host.docker.internal:8000"]

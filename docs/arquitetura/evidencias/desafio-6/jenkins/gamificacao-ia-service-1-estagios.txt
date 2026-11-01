@@ -1,0 +1,5 @@
+# gamificacao-ia-service #1 -> SUCCESS em 66 s
+  Declarative: Checkout SCM        SUCCESS     3 s
+  Testes                           SUCCESS     6 s
+  Imagem Docker                    SUCCESS     8 s
+  Smoke test da imagem             SUCCESS     2 s

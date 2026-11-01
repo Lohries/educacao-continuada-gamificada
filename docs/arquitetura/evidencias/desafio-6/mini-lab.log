@@ -1,0 +1,40 @@
+
+== 16:32:27 Subindo ia-service (8000) e Core (8081)
+
+== 16:32:36 Subindo Prometheus v2.55.1 e Grafana 11.3.1 (rede lab-obs) com a configuracao versionada
+alvos do Prometheus:
+    core up
+    ia-service up
+
+== 16:32:48 Fase 1 (90 s): trafego normal com a IA no ar
+recomendacoes/s por origem:
+    origem=ia = 1.8698
+p95 do ranking (s):
+    (total) = 0.0055
+circuito aberto?
+    name=ia-service,state=open = 0.0
+
+== 16:34:18 Fase 2 (90 s): ia-service derrubado (condicao provocada)
+recomendacoes/s por origem:
+    origem=ia = 0.0
+    origem=fallback = 1.6867
+circuito aberto?
+    name=ia-service,state=open = 1.0
+ia-service no ar (up)?
+    (total) = 0.0
+respostas 5xx do Core:
+alertas disparados:
+    ComponenteForaDoAr firing - ia-service nao responde ao Prometheus
+    IaEmModoDegradado firing - Core respondendo recomendacoes pelo fallback local
+    CircuitoIaAberto firing - Circuit breaker do ia-service aberto
+captura salva em C:/Users/Luis/Downloads/devops/docs/arquitetura/evidencias/desafio-6/grafana-ia-fora.png
+
+== 16:36:04 Fase 3 (60 s): ia-service de volta
+recomendacoes/s por origem:
+    origem=ia = 1.6499
+    origem=fallback = 0.0
+circuito aberto?
+    name=ia-service,state=open = 0.0
+captura salva em C:/Users/Luis/Downloads/devops/docs/arquitetura/evidencias/desafio-6/grafana-recuperacao.png
+
+== 16:37:23 Fim do mini-lab

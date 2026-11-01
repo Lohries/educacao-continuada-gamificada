@@ -1,0 +1,7 @@
+# gamificacao-core-portao #1 (branch lab/portao-arquitetura, commit 0b68539) -> FAILED em 46 s
+  Declarative: Checkout SCM        SUCCESS          16 s
+  Regras de arquitetura            FAILED            13 s
+  Testes e cobertura               PULADO (portao)    0 s
+  Imagem Docker                    PULADO (portao)    0 s
+  Smoke test da imagem             PULADO (portao)    0 s
+Os estagios PULADOS nao executaram: o pipeline parou no portao de arquitetura (o Jenkins os lista como FAILED com 0 s).

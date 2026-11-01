@@ -64,6 +64,9 @@ Tudo isso mantendo confiabilidade, testabilidade, observabilidade e evolução c
 | ASR-12 | Tolerância à conectividade intermitente (Reliability) | 5 | Comunicação/implantação: broker com sessão persistente, QoS 1, fila local, ack após o Core | [ADR-005](../adr/ADR-005-iot-mqtt-gateway.md) | Mini-lab: queda do dispositivo e do gateway sem perda |
 | ASR-13 | Eficiência de comunicação (Performance) | 5 | Comunicação: MQTT com conexão mantida e payload compacto | [ADR-005](../adr/ADR-005-iot-mqtt-gateway.md) | 99 bytes por evento |
 | ASR-14 | Interoperabilidade / Core desacoplado dos dispositivos (Supportability) | 5 | Estrutura: gateway traduz para o contrato do Core | [ADR-005](../adr/ADR-005-iot-mqtt-gateway.md) | `test_tradutor.py`; Core sem dependência de MQTT |
+| ASR-15 | Deploy independente com segurança (Supportability) | 6 | Implantação: um pipeline e um artefato por componente | [ADR-006](../adr/ADR-006-pipelines-por-componente-e-observabilidade.md) | 3 jobs Jenkins SUCCESS de forma independente |
+| ASR-16 | Observabilidade das decisões (Supportability) | 6 | Operação: métricas de evidência + alertas por ASR | [ADR-006](../adr/ADR-006-pipelines-por-componente-e-observabilidade.md) | Prometheus/Grafana com a IA derrubada: 3 alertas, fallback sem 5xx |
+| ASR-17 | Testabilidade como portão (Supportability) | 6 | Implantação: regras de arquitetura e cobertura bloqueiam o build | [ADR-006](../adr/ADR-006-pipelines-por-componente-e-observabilidade.md) | Job de experimento FAILED no portão de arquitetura |
 
 ---
 
@@ -614,3 +617,191 @@ sequenceDiagram
 - Suíte Java: **51/51** ([log](evidencias/desafio-5/testes-desafio-5.log)).
 
 **Conclusão:** cada salto guarda o evento até o próximo confirmar: fila local, broker, ack manual e unique no Core. Por isso as quedas do dispositivo e do gateway não perderam nenhum evento, e as duplicatas foram barradas. O MQTT se justificou pela intermitência e pela eficiência, e não há ASR para um segundo broker. Para produção, falta só o endurecimento de segurança (TLS + ACL).
+
+---
+
+## Desafio 6 — CI/CD e observabilidade
+
+**Pergunta:** a arquitetura que saiu dos Desafios 1 a 5 pode ser construída, entregue e observada com segurança, e as métricas comprovam as decisões?
+
+### RF / RNF
+
+- **RFs:** todos os RFs dos componentes construídos (RF01 a RF06), mais a operação e a evolução da solução.
+- **RNFs analisados:**
+  - observabilidade e deploy independente (Supportability);
+  - confiabilidade e recuperabilidade (Reliability);
+  - testabilidade;
+  - desempenho (Performance).
+
+### ASR (máx. 3)
+
+| RNF | ASR? | Por quê |
+|---|---|---|
+| Deploy independente | **Sim (ASR-15)** | A IA e o gateway foram separados para mudar sozinhos; isso só é real com um pipeline e um artefato por componente (**implantação**) |
+| Observabilidade | **Sim (ASR-16)** | As hipóteses dos ADRs (fallback, circuito, outbox, p95, IoT) precisam virar métricas e alertas (**operação**) |
+| Testabilidade | **Sim (ASR-17)** | As regras de arquitetura e a cobertura precisam **bloquear** a entrega (**implantação**) |
+| Confiabilidade, recuperabilidade, desempenho | Já decididos | ASRs 02, 06, 09, 10 e 12: aqui eles são **medidos**, não redecididos |
+
+### RPC
+
+- O Jenkins é a base da esteira.
+- Prometheus e Grafana são as ferramentas do laboratório.
+- Artefatos e configurações são versionados.
+
+### Alternativas e trade-offs
+
+| | A — Pipeline único (monorepo) | **B — Pipeline por componente** |
+|---|---|---|
+| Deploy independente (ASR-15) | Não: falha no Python bloqueia o Core | **Sim** |
+| Tempo de feedback | Tudo a cada mudança | **Só o componente alterado** (`includedRegions`) |
+| Manutenção | 1 arquivo | **3 Jenkinsfiles** |
+| Contrato entre componentes | Implícito | **Testado dos dois lados** (`RecomendacaoDegradadaTest` × pytest; `test_tradutor` × `EventoAprendizagemTest`) |
+
+**Serviços independentes exigem pipelines independentes?** Sim. Senão, o deploy independente que justificou separar a IA (ADR-003) e o gateway (ADR-005) não existe na prática.
+
+**O que bloqueia o deploy:**
+1. As regras de arquitetura (Modulith e ArchUnit), rodadas primeiro para falhar rápido.
+2. Os testes e a cobertura (`jacoco:check`: ≥ 80% no total e ≥ 95% em `conquista`).
+3. A imagem não constrói.
+4. O smoke test da imagem: health e as métricas de evidência.
+
+**Métrica técnica × evidência arquitetural:**
+- **Técnica:** CPU ou contagem de requisições HTTP descrevem o componente.
+- **Evidência:** é a métrica que confirma ou derruba a hipótese de um ADR. Por exemplo, `ia_respostas_total{origem="fallback"}` subir **sem** 5xx confirma o ADR-003.
+
+| ADR | Hipótese | Métrica de evidência | Alerta |
+|---|---|---|---|
+| 001 | Ranking não precisa ser extraído | p95 de `GET /api/ranking` | `RankingLento` (p95 > 300 ms por 10 min) |
+| 003 | Queda da IA vira degradação | `ia_respostas_total{origem}`, estado do circuito, 5xx | `IaEmModoDegradado`, `CircuitoIaAberto` |
+| 004 | Nenhum evento se perde | `eventos_pendentes`, `notificacao_envios_total{resultado}` | `EventosPendentesAcumulando` |
+| 005 | IoT sem perda nem duplicidade | `iot_eventos_*_total`, `iot_falhas_core_total` | — |
+| todos | Componentes no ar | `up` | `ComponenteForaDoAr` |
+
+### Decisão — [ADR-006](../adr/ADR-006-pipelines-por-componente-e-observabilidade.md)
+
+- **Pipelines:** `backend/Jenkinsfile`, `ia-service/Jenkinsfile` e `iot/Jenkinsfile`. Os jobs são criados como código em [`ci/jenkins/`](../../ci/jenkins/): imagem do Jenkins 2.580.2, JCasC e Job DSL, com `includedRegions` por pasta.
+- **Instrumentação:** Micrometer no Core, `prometheus-fastapi-instrumentator` no ia-service e `prometheus_client` no gateway.
+- **Coleta e alertas:** Prometheus v2.55.1 com [`alertas.yml`](../../observabilidade/prometheus/alertas.yml), em que cada alerta é ligado a um ASR.
+- **Painel:** Grafana 11.3.1 com o painel provisionado **"B1 — Evidências arquiteturais"** ([JSON](../../observabilidade/grafana/dashboards/b1-evidencias.json)).
+
+### C4 — Deployment (laboratório)
+
+```mermaid
+flowchart TB
+    subgraph dev["Máquina de desenvolvimento / laboratório"]
+        subgraph docker["Docker Engine"]
+            jenkins["Jenkins 2.580.2<br/>[ci/jenkins: JCasC + Job DSL]<br/>3 pipelines"]
+            subgraph app["docker compose"]
+                core["backend<br/>[eclipse-temurin:21-jre]"]
+                ia["ia-service<br/>[python:3.12-slim]"]
+                gw["iot-gateway<br/>[python:3.12-slim]"]
+                mq["mosquitto<br/>[eclipse-mosquitto:2.0.20]"]
+                pg[("postgres:16-alpine")]
+                prom["prometheus<br/>[v2.55.1 + alertas.yml]"]
+                graf["grafana<br/>[11.3.1, painel provisionado]"]
+                front["frontend<br/>[Vue 3]"]
+            end
+        end
+        repo[("Repositório Git<br/>Jenkinsfiles, compose,<br/>prometheus.yml, painel")]
+    end
+    repo -->|checkout por componente| jenkins
+    jenkins -->|"docker build + smoke test"| docker
+    front --> core
+    core --> pg
+    core --> ia
+    mq --> gw --> core
+    prom -->|"scrape /actuator/prometheus"| core
+    prom -->|"scrape /metrics"| ia
+    prom -->|"scrape :9101/metrics"| gw
+    graf --> prom
+```
+
+### Evidência (mini-lab)
+
+**1. Jenkins: os três pipelines rodando de verdade** ([estágios e consoles](evidencias/desafio-6/jenkins/))
+
+| Job | Resultado | Estágios |
+|---|---|---|
+| `gamificacao-core` #1 | **SUCCESS** em 494 s | Regras de arquitetura (107 s) → Testes e cobertura: **52/52**, "All coverage checks have been met" (71 s) → Imagem Docker (268 s) → Smoke test: health UP; `gamificacao_conclusoes_total` e `eventos_pendentes` expostos (15 s) |
+| `gamificacao-ia-service` #1 | **SUCCESS** em 66 s | pytest (6 s) → imagem (8 s) → smoke `/health` + `/metrics` (2 s) |
+| `gamificacao-iot-gateway` #1 | **SUCCESS** em 46 s | pytest (3 s) → imagem (9 s) → smoke (1 s) |
+| `gamificacao-core-portao` #1 (experimento) | **FAILED** em 46 s | Branch local `lab/portao-arquitetura` (commit `0b68539`, não mesclado) com o Ranking acessando `usuario.internal.UsuarioRepository`. **Parou no primeiro portão** (`Module 'ranking' depends on non-exposed type…`); testes, imagem e smoke **não executaram** |
+
+**2. Observabilidade com falha provocada** ([script](evidencias/desafio-6/mini-lab.sh), [log](evidencias/desafio-6/mini-lab.log)): Core e ia-service instrumentados, Prometheus e Grafana com a configuração versionada, tráfego contínuo em ranking e recomendação.
+
+| Fase | Consulta ao Prometheus | Alertas |
+|---|---|---|
+| 1 — IA no ar (90 s) | `origem=ia` 1,87 rec/s; p95 do ranking **5,5 ms**; circuito `open=0` | nenhum |
+| 2 — **ia-service derrubado** (90 s) | `origem=ia` 0 e **`origem=fallback` 1,69 rec/s**; circuito **`open=1`**; `up{ia-service}=0`; **nenhuma série de 5xx** no Core | **`ComponenteForaDoAr`, `IaEmModoDegradado` e `CircuitoIaAberto` firing** |
+| 3 — IA de volta (60 s) | `origem=ia` 1,65 e `fallback` 0; circuito `open=0` | — |
+
+![Grafana com o ia-service fora](evidencias/desafio-6/grafana-ia-fora.png)
+
+*Captura do fim da fase 2:*
+- O gráfico de recomendações mostra a troca de `ia` (amarelo) para `fallback` (verde), e as respostas HTTP continuam todas 200/201.
+- O painel do circuito aparece "FECHADO" porque, com a IA fora, o circuito alterna entre OPEN e HALF_OPEN a cada 15 s (`automatic-transition`), e a captura caiu numa janela de meio-aberto. A consulta da mesma fase registrou `open=1`.
+- O painel de IoT está vazio porque o gateway não fazia parte deste lab; as métricas dele estão no mini-lab do Desafio 5.
+
+Recuperação: [`grafana-recuperacao.png`](evidencias/desafio-6/grafana-recuperacao.png).
+
+**Conclusão:**
+- Os pipelines por componente funcionaram de forma independente: Python em cerca de 1 min, o Core em cerca de 8 min.
+- O portão de arquitetura impediu que uma violação chegasse à imagem.
+- As métricas confirmaram, em operação, a hipótese do ADR-003 (degradação sem 5xx, alerta e recuperação automática) e deram ao ADR-001 um gatilho mensurável: o p95 do ranking ficou em 5,5 ms, muito abaixo dos 300 ms, então **a extração do Ranking continua não justificada**.
+
+---
+
+## C4 final — Container
+
+```mermaid
+flowchart TB
+    aluno["👤 Aluno<br/>[Pessoa]"]
+    disp["📟 Dispositivos de laboratório<br/>[Sistema externo]"]
+    prov["Provedor de notificação<br/>[Sistema externo]"]
+    front["Front-end Web<br/>[Container: Vue 3 + Vite]"]
+    subgraph core["Core Gamificação [Container: Java 21 / Spring Boot 3.4 — Monólito Modular]"]
+        direction LR
+        m1["usuario · curso · ranking"]
+        m2["matricula → conquista<br/>(Hexagonal)"]
+        m3["notificacao<br/>(listener assíncrono)"]
+        m4["recomendacao<br/>(circuit breaker)"]
+        m5["aprendizagem<br/>(idempotente)"]
+    end
+    ia["ia-service<br/>[Container: Python 3.12 / FastAPI]<br/>recomendação + RAG"]
+    mq["Broker MQTT<br/>[Container: Mosquitto 2.0.20]"]
+    gw["Gateway IoT<br/>[Container: Python / paho-mqtt]"]
+    db[("Banco relacional<br/>[PostgreSQL 16]<br/>inclui event_publication")]
+    obs["Prometheus + Grafana<br/>[Containers de observabilidade]"]
+    aluno -->|HTTPS| front
+    front -->|REST/JSON| core
+    core -->|"REST, timeout + fallback (ADR-003)"| ia
+    m2 -.->|"CursoConcluido (outbox, ADR-004)"| m3
+    m3 --> prov
+    disp -->|"MQTT QoS 1 (ADR-005)"| mq
+    mq --> gw
+    gw -->|"REST idempotente"| m5
+    core -->|JPA| db
+    obs -.->|scrape| core
+    obs -.->|scrape| ia
+    obs -.->|scrape| gw
+```
+
+---
+
+## Síntese final — o que vai para a PoC da Avaliação Final
+
+| Decisão | Vai para a PoC? | Como | Gatilho de revisão |
+|---|---|---|---|
+| ADR-001 Monólito Modular | **Sim** | Base do Core, com o `ModularidadeTest` no pipeline | p95 do ranking > 300 ms por 10 min (hoje 5,5 ms) ou necessidade de deploy separado |
+| ADR-002 Hexagonal em `conquista` | **Sim** | Regras de gamificação novas entram no domínio + porta | Regras configuráveis por instituição → porta de leitura de regras |
+| ADR-003 ia-service separado | **Sim** | Recomendação e assistente com degradação controlada | RAG com LLM externo → separar o RAG em serviço próprio |
+| ADR-004 Outbox + listener | **Sim** | Notificação e futuros consumidores de `CursoConcluido` | Primeiro consumidor fora do processo → externalizar para RabbitMQ |
+| ADR-005 MQTT + gateway | **Sim, com endurecimento** | TLS 8883, credencial por dispositivo e ACL antes de qualquer uso real | Vários consumidores internos de eventos IoT → mensageria interna |
+| ADR-006 Pipelines + observabilidade | **Sim** | Os três pipelines e o painel viram a esteira e o painel da PoC | Ambiente compartilhado → estágio de deploy e agentes Jenkins isolados |
+
+**Leitura de trás para frente** (a regra de ouro), usando o ia-service como exemplo:
+1. O C4 mostra o ia-service como container separado, ligado ao Core por REST com timeout e fallback.
+2. Isso é explicado pelo ADR-003.
+3. O ADR-003 se sustenta nos ASRs 06, 07 e 08 e na RPC do Python.
+4. Os ASRs derivam do RF03/RF04 e dos RNFs de tolerância a falhas, deploy e escala.
+5. A evidência são o `RecomendacaoDegradadaTest`, o mini-lab com kill do Python e o Grafana mostrando o fallback sem 5xx.

@@ -1,0 +1,160 @@
+Started by user lab
+Checking out git file:///repo into /var/jenkins_home/workspace/gamificacao-ia-service@script/cab4bdc172931d028cbb55d97177329ead9fc982143bc010d0716918e3b2eef4 to read ia-service/Jenkinsfile
+The recommended git tool is: NONE
+No credentials specified
+DEPRECATED: The extension that requires a workspace for polling is deprecated for Pipeline jobs. Use Pipeline-native SCM polling instead.
+Cloning the remote Git repository
+Cloning repository file:///repo
+ > git init /var/jenkins_home/workspace/gamificacao-ia-service@script/cab4bdc172931d028cbb55d97177329ead9fc982143bc010d0716918e3b2eef4 # timeout=10
+Fetching upstream changes from file:///repo
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- file:///repo +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url file:///repo # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/b1-architecture-lab^{commit} # timeout=10
+Checking out Revision 47d1ea5ca5dbb5b9a493e35859f2059161e63aa1 (refs/remotes/origin/b1-architecture-lab)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 47d1ea5ca5dbb5b9a493e35859f2059161e63aa1 # timeout=10
+Commit message: "feat(ci): adiciona pipelines Jenkins por componente e observabilidade (B1 Desafio 6)"
+First time build. Skipping changelog.
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/gamificacao-ia-service
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: NONE
+No credentials specified
+DEPRECATED: The extension that requires a workspace for polling is deprecated for Pipeline jobs. Use Pipeline-native SCM polling instead.
+Cloning the remote Git repository
+Cloning repository file:///repo
+ > git init /var/jenkins_home/workspace/gamificacao-ia-service # timeout=10
+Fetching upstream changes from file:///repo
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- file:///repo +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url file:///repo # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/b1-architecture-lab^{commit} # timeout=10
+Checking out Revision 47d1ea5ca5dbb5b9a493e35859f2059161e63aa1 (refs/remotes/origin/b1-architecture-lab)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 47d1ea5ca5dbb5b9a493e35859f2059161e63aa1 # timeout=10
+Commit message: "feat(ci): adiciona pipelines Jenkins por componente e observabilidade (B1 Desafio 6)"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Testes)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/gamificacao-ia-service/ia-service
+[Pipeline] {
+[Pipeline] sh
++ python3 -m venv .venv
++ .venv/bin/pip install -q -r requirements-dev.txt
++ .venv/bin/python -m pytest -q --junitxml=relatorio-pytest.xml
+........                                                                 [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/starlette/testclient.py:40
+  /var/jenkins_home/workspace/gamificacao-ia-service/ia-service/.venv/lib/python3.13/site-packages/starlette/testclient.py:40: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /var/jenkins_home/workspace/gamificacao-ia-service/ia-service/relatorio-pytest.xml -
+8 passed, 1 warning in 0.22s
+[Pipeline] }
+[Pipeline] // dir
+Post stage
+[Pipeline] junit
+Recording test results
+[Checks API] No suitable checks publisher found.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Imagem Docker)
+[Pipeline] sh
++ docker build -q -t gamificacao-ia-service:1 ia-service
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+sha256:266912f572988a46739796a9b5a34c757435a99ccc99a9c5cdb09bc809f0a70b
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Smoke test da imagem)
+[Pipeline] sh
++ docker rm -f smoke-ia-1
++ docker run -d --name smoke-ia-1 gamificacao-ia-service:1
+12123864af83b996af72e94c695bc5274fb20f30ae530904722fe8f71a66c479
++ seq 1 30
++ docker exec smoke-ia-1 python -c import urllib.request;print(urllib.request.urlopen('http://localhost:8000/health').read().decode())
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/urllib/request.py", line 1357, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+  File "/usr/local/lib/python3.12/http/client.py", line 1386, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/local/lib/python3.12/http/client.py", line 1432, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.12/http/client.py", line 1381, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.12/http/client.py", line 1141, in _send_output
+    self.send(msg)
+  File "/usr/local/lib/python3.12/http/client.py", line 1085, in send
+    self.connect()
+  File "/usr/local/lib/python3.12/http/client.py", line 1051, in connect
+    self.sock = self._create_connection(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/socket.py", line 865, in create_connection
+    raise exceptions[0]
+  File "/usr/local/lib/python3.12/socket.py", line 850, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/usr/local/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/urllib/request.py", line 1386, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/urllib/request.py", line 1360, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [Errno 111] Connection refused>
++ sleep 1
++ docker exec smoke-ia-1 python -c import urllib.request;print(urllib.request.urlopen('http://localhost:8000/health').read().decode())
+{"status":"UP","modeloRecomendacao":"conteudo-jaccard-v1","geradorAssistente":"extrativo-v1"}
++ break
++ docker exec smoke-ia-1 python -c import urllib.request;t=urllib.request.urlopen('http://localhost:8000/metrics').read().decode();assert 'http_requests_total' in t;print('metrics ok')
+metrics ok
+Post stage
+[Pipeline] sh
++ docker rm -f smoke-ia-1
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

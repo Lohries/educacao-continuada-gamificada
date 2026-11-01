@@ -1,0 +1,99 @@
+Started by user lab
+Checking out git file:///repo into /var/jenkins_home/workspace/gamificacao-iot-gateway@script/cab4bdc172931d028cbb55d97177329ead9fc982143bc010d0716918e3b2eef4 to read iot/Jenkinsfile
+The recommended git tool is: NONE
+No credentials specified
+DEPRECATED: The extension that requires a workspace for polling is deprecated for Pipeline jobs. Use Pipeline-native SCM polling instead.
+Cloning the remote Git repository
+Cloning repository file:///repo
+ > git init /var/jenkins_home/workspace/gamificacao-iot-gateway@script/cab4bdc172931d028cbb55d97177329ead9fc982143bc010d0716918e3b2eef4 # timeout=10
+Fetching upstream changes from file:///repo
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- file:///repo +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url file:///repo # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/b1-architecture-lab^{commit} # timeout=10
+Checking out Revision 47d1ea5ca5dbb5b9a493e35859f2059161e63aa1 (refs/remotes/origin/b1-architecture-lab)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 47d1ea5ca5dbb5b9a493e35859f2059161e63aa1 # timeout=10
+Commit message: "feat(ci): adiciona pipelines Jenkins por componente e observabilidade (B1 Desafio 6)"
+First time build. Skipping changelog.
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/gamificacao-iot-gateway
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: NONE
+No credentials specified
+DEPRECATED: The extension that requires a workspace for polling is deprecated for Pipeline jobs. Use Pipeline-native SCM polling instead.
+Cloning the remote Git repository
+Cloning repository file:///repo
+ > git init /var/jenkins_home/workspace/gamificacao-iot-gateway # timeout=10
+Fetching upstream changes from file:///repo
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- file:///repo +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url file:///repo # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/b1-architecture-lab^{commit} # timeout=10
+Checking out Revision 47d1ea5ca5dbb5b9a493e35859f2059161e63aa1 (refs/remotes/origin/b1-architecture-lab)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 47d1ea5ca5dbb5b9a493e35859f2059161e63aa1 # timeout=10
+Commit message: "feat(ci): adiciona pipelines Jenkins por componente e observabilidade (B1 Desafio 6)"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Testes)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/gamificacao-iot-gateway/iot
+[Pipeline] {
+[Pipeline] sh
++ python3 -m venv .venv
++ .venv/bin/pip install -q -r requirements-dev.txt
++ cd gateway
++ ../.venv/bin/python -m pytest -q --junitxml=relatorio-pytest.xml
+..........                                                               [100%]
+- generated xml file: /var/jenkins_home/workspace/gamificacao-iot-gateway/iot/gateway/relatorio-pytest.xml -
+10 passed in 0.02s
+[Pipeline] }
+[Pipeline] // dir
+Post stage
+[Pipeline] junit
+Recording test results
+[Checks API] No suitable checks publisher found.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Imagem Docker)
+[Pipeline] sh
++ docker build -q -t gamificacao-iot-gateway:1 -f iot/gateway/Dockerfile iot
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+sha256:b041cebbd64202e27af7c5e629138f8fd88d5654b01162e36e77fcb2d3f89a84
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Smoke test da imagem)
+[Pipeline] sh
++ docker run --rm gamificacao-iot-gateway:1 python -c import gateway, tradutor; print('gateway ok')
+gateway ok
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

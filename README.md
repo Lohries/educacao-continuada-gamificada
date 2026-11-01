@@ -127,6 +127,21 @@ backend/src/main/java/br/edu/gamificacao/
 As fronteiras são verificadas pelo Spring Modulith em
 [`ModularidadeTest`](backend/src/test/java/br/edu/gamificacao/ModularidadeTest.java).
 
+## B1 — Architecture Lab (6 desafios)
+
+O registro completo das decisões (RF → RNF → ASR + RPC → alternativas → ADR → C4 → evidência), a matriz cumulativa de ASRs e a síntese para a AF estão em **[docs/arquitetura/README.md](docs/arquitetura/README.md)**.
+
+| Desafio | Decisão | ADR | Código / microsolução |
+|---|---|---|---|
+| 1 — Drivers e evolução do Core | Monólito Modular (Spring Modulith) | [ADR-001](docs/adr/ADR-001-monolito-modular.md) | módulos em `backend/src/main/java/br/edu/gamificacao/` |
+| 2 — Organização interna do Core | Ports & Adapters em `conquista` | [ADR-002](docs/adr/ADR-002-ports-and-adapters-na-conquista.md) | `conquista/porta`, `conquista/adapter` |
+| 3 — Serviço Python e IA | ia-service FastAPI + circuit breaker | [ADR-003](docs/adr/ADR-003-servico-python-de-ia.md) | [`ia-service/`](ia-service/), módulo `recomendacao` |
+| 4 — Comunicação e eventos | Outbox (Spring Modulith) + listener assíncrono | [ADR-004](docs/adr/ADR-004-eventos-de-conclusao.md) | módulo `notificacao` |
+| 5 — IoT e MQTT | Mosquitto + gateway + ingestão idempotente | [ADR-005](docs/adr/ADR-005-iot-mqtt-gateway.md) | [`iot/`](iot/), módulo `aprendizagem` |
+| 6 — CI/CD e observabilidade | Jenkins por componente + Prometheus/Grafana | [ADR-006](docs/adr/ADR-006-pipelines-por-componente-e-observabilidade.md) | [`ci/jenkins/`](ci/jenkins/), [`observabilidade/`](observabilidade/) |
+
+Com Docker Desktop rodando, `docker compose up --build` sobe Core, PostgreSQL, PgAdmin, ia-service, Mosquitto, gateway IoT, Prometheus (http://localhost:9090), Grafana (http://localhost:3000) e o front-end.
+
 ## Dependências (Spring Boot)
 
 Spring Web, Spring Data JPA, H2, PostgreSQL (driver), Lombok, Bean

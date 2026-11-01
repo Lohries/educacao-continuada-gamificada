@@ -1,0 +1,6 @@
+# gamificacao-core #1 -> SUCCESS em 494 s
+  Declarative: Checkout SCM        SUCCESS     3 s
+  Regras de arquitetura            SUCCESS   107 s
+  Testes e cobertura               SUCCESS    71 s
+  Imagem Docker                    SUCCESS   268 s
+  Smoke test da imagem             SUCCESS    15 s

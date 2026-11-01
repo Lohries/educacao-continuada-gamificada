@@ -1,5 +1,6 @@
 # Jenkins como codigo (ADR-006): usuario do laboratorio e um job por componente.
 # O repositorio e montado em /repo; cada job so dispara quando o seu diretorio muda.
+# ^${...} escapa a interpolacao do JCasC para o Groovy do Job DSL.
 jenkins:
   systemMessage: "B1 Architecture Lab — pipelines por componente"
   numExecutors: 2
@@ -17,8 +18,8 @@ jobs:
         [nome: 'ia-service', dir: 'ia-service'],
         [nome: 'iot-gateway', dir: 'iot'],
       ].each { c ->
-        pipelineJob("gamificacao-${c.nome}") {
-          description("Pipeline do componente ${c.dir}/ (ADR-006)")
+        pipelineJob("gamificacao-^${c.nome}") {
+          description("Pipeline do componente ^${c.dir}/ (ADR-006)")
           triggers { scm('H/5 * * * *') }
           definition {
             cpsScm {
@@ -26,10 +27,10 @@ jobs:
                 git {
                   remote { url('file:///repo') }
                   branch('*/b1-architecture-lab')
-                  extensions { pathRestriction { includedRegions("${c.dir}/.*"); excludedRegions('') } }
+                  extensions { pathRestriction { includedRegions("^${c.dir}/.*"); excludedRegions('') } }
                 }
               }
-              scriptPath("${c.dir}/Jenkinsfile")
+              scriptPath("^${c.dir}/Jenkinsfile")
               lightweight(false)
             }
           }

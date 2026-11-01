@@ -1,0 +1,120 @@
+Started by user lab
+Checking out git file:///repo into /var/jenkins_home/workspace/gamificacao-core-portao@script/cab4bdc172931d028cbb55d97177329ead9fc982143bc010d0716918e3b2eef4 to read backend/Jenkinsfile
+The recommended git tool is: NONE
+No credentials specified
+DEPRECATED: The extension that requires a workspace for polling is deprecated for Pipeline jobs. Use Pipeline-native SCM polling instead.
+Cloning the remote Git repository
+Cloning repository file:///repo
+ > git init /var/jenkins_home/workspace/gamificacao-core-portao@script/cab4bdc172931d028cbb55d97177329ead9fc982143bc010d0716918e3b2eef4 # timeout=10
+Fetching upstream changes from file:///repo
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- file:///repo +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url file:///repo # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/lab/portao-arquitetura^{commit} # timeout=10
+Checking out Revision 0b6853900971af57632428f32b38e8ca0b98b11c (refs/remotes/origin/lab/portao-arquitetura)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 0b6853900971af57632428f32b38e8ca0b98b11c # timeout=10
+Commit message: "test(ci): viola a fronteira do modulo usuario para provar o portao (nao mesclar)"
+First time build. Skipping changelog.
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/gamificacao-core-portao
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: NONE
+No credentials specified
+DEPRECATED: The extension that requires a workspace for polling is deprecated for Pipeline jobs. Use Pipeline-native SCM polling instead.
+Cloning the remote Git repository
+Cloning repository file:///repo
+ > git init /var/jenkins_home/workspace/gamificacao-core-portao # timeout=10
+Fetching upstream changes from file:///repo
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- file:///repo +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url file:///repo # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/lab/portao-arquitetura^{commit} # timeout=10
+Checking out Revision 0b6853900971af57632428f32b38e8ca0b98b11c (refs/remotes/origin/lab/portao-arquitetura)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 0b6853900971af57632428f32b38e8ca0b98b11c # timeout=10
+Commit message: "test(ci): viola a fronteira do modulo usuario para provar o portao (nao mesclar)"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Regras de arquitetura)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/gamificacao-core-portao/backend
+[Pipeline] {
+[Pipeline] sh
++ chmod +x mvnw
++ ./mvnw -B -q test -Dtest=ModularidadeTest,HexagonalConquistaTest -Djacoco.skip=true
+19:41:44.123 [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 21.0.13
+[ERROR] Tests run: 2, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 2.086 s <<< FAILURE! -- in br.edu.gamificacao.ModularidadeTest
+[ERROR] br.edu.gamificacao.ModularidadeTest.modulosRespeitamAsFronteiras -- Time elapsed: 0.181 s <<< ERROR!
+org.springframework.modulith.core.Violations: 
+- Module 'ranking' depends on non-exposed type br.edu.gamificacao.usuario.internal.UsuarioRepository within module 'usuario'!
+Field <br.edu.gamificacao.ranking.RankingService.atalhoProibido> has type <br.edu.gamificacao.usuario.internal.UsuarioRepository> in (RankingService.java:0)
+	at org.springframework.modulith.core.Violations.and(Violations.java:141)
+	at org.springframework.modulith.core.ApplicationModules.detectViolations(ApplicationModules.java:485)
+	at org.springframework.modulith.core.ApplicationModules.verify(ApplicationModules.java:452)
+	at br.edu.gamificacao.ModularidadeTest.modulosRespeitamAsFronteiras(ModularidadeTest.java:17)
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+	at java.base/java.util.ArrayList.forEach(Unknown Source)
+	at java.base/java.util.ArrayList.forEach(Unknown Source)
+
+[ERROR] Errors: 
+[ERROR]   ModularidadeTest.modulosRespeitamAsFronteiras:17 » Violations - Module 'ranking' depends on non-exposed type br.edu.gamificacao.usuario.internal.UsuarioRepository within module 'usuario'!
+Field <br.edu.gamificacao.ranking.RankingService.atalhoProibido> has type <br.edu.gamificacao.usuario.internal.UsuarioRepository> in (RankingService.java:0)
+[ERROR] Tests run: 4, Failures: 0, Errors: 1, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.2:test (default-test) on project educacao-continuada-gamificada: 
+[ERROR] 
+[ERROR] See /var/jenkins_home/workspace/gamificacao-core-portao/backend/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Testes e cobertura)
+Stage "Testes e cobertura" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Imagem Docker)
+Stage "Imagem Docker" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Smoke test da imagem)
+Stage "Smoke test da imagem" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+ERROR: script returned exit code 1
+Finished: FAILURE
